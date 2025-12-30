@@ -7,7 +7,7 @@ export function Navbar() {
     <nav className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4 backdrop-blur-sm lg:px-12">
       <div className="flex items-center gap-2">
         <div className="h-8 w-8 rounded-md bg-cyan-500" />
-        <span className="text-xl font-bold">PortfolioEngine</span>
+        <a href='/' className="text-xl font-bold">PortfolioEngine</a>
       </div>
 
       <div className="hidden items-center gap-8 md:flex">
@@ -26,12 +26,16 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
+        <a href="/auth">
         <Button variant="ghost" size="sm">
           Login
         </Button>
+        </a>
+        <a href="/auth">
         <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-black">
           Register
         </Button>
+        </a>
       </div>
     </nav>
   )

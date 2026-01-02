@@ -24,13 +24,10 @@ export function HeroSection() {
         </p>
 
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <a href="/auth">
-            <Button size="lg" className="group bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
-              Start Building – It's Free
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </a>
-          
+          <Button size="lg" className="group bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
+            Start Building – It's Free
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </Button>
           <Button
             size="lg"
             variant="outline"

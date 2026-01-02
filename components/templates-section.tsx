@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button"
 
 const templates = [
   {
-    name: "The Legacy Black",
-    description: "Monochrome, Minimalist but Aesthetic portfolio",
-    preview: "/terminal-style-portfolio-with-monochrome-design.png",
+    name: "The Terminal",
+    description: "Monochrome, command-line inspired aesthetic",
+    preview: "/terminal-style-portfolio-with-monochrome-design.jpg",
   },
   {
     name: "The Modern Paper",

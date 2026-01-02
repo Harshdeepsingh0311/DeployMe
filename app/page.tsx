@@ -1,12 +1,12 @@
 "use client"
-import { CursorAnimation } from "@/components/home/cursor-animation"
-import { Navbar } from "@/components/home/navbar"
-import { HeroSection } from "@/components/home/hero-section"
-import { FeaturesGrid } from "@/components/home/features-grid"
-import { SocialProof } from "@/components/home/social-proof"
-import { TemplatesSection } from "@/components/home/templates-section"
-import { PricingSection } from "@/components/home/pricing-section"
-import { Footer } from "@/components/home/footer"
+import { CursorAnimation } from "@/components/cursor-animation"
+import { Navbar } from "@/components/navbar"
+import { HeroSection } from "@/components/hero-section"
+import { FeaturesGrid } from "@/components/features-grid"
+import { SocialProof } from "@/components/social-proof"
+import { TemplatesSection } from "@/components/templates-section"
+import { PricingSection } from "@/components/pricing-section"
+import { Footer } from "@/components/footer"
 
 export default function PortfolioBuilderPage() {
   return (

@@ -7,7 +7,7 @@ const templates = [
   {
     name: "The Terminal",
     description: "Monochrome, command-line inspired aesthetic",
-    preview: "/terminal-style-portfolio-with-monochrome-design.jpg",
+    preview: "/terminal-style-portfolio-with-monochrome-design.png",
   },
   {
     name: "The Modern Paper",

@@ -62,12 +62,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-2xl mt-5">
       <div className="mb-8 text-center">
-        <div className="inline-flex items-center gap-2 mb-6">
-          <div className="h-8 w-8 rounded-md bg-cyan-500" />
-          <span className="text-2xl font-bold">PortfolioEngine</span>
-        </div>
         <h1 className="text-3xl font-bold mb-2">Create Your Portfolio</h1>
         <p className="text-muted-foreground">Join thousands of developers showcasing their work</p>
       </div>

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { ArrowRight, Lock, Mail } from "lucide-react"
+import { CursorAnimation } from "@/components/cursor-animation"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -23,12 +24,10 @@ export default function LoginPage() {
   }
 
   return (
+    
     <div className="w-full max-w-md">
+      <CursorAnimation />
       <div className="mb-8 text-center">
-        <div className="inline-flex items-center gap-2 mb-6">
-          <div className="h-8 w-8 rounded-md bg-cyan-500" />
-          <span className="text-2xl font-bold">PortfolioEngine</span>
-        </div>
         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
         <p className="text-muted-foreground">Sign in to your portfolio and continue building</p>
       </div>

@@ -7,31 +7,37 @@ export function Navbar() {
     <nav className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4 backdrop-blur-sm lg:px-12">
       <div className="flex items-center gap-2">
         <div className="h-8 w-8 rounded-md bg-cyan-500" />
-        <span className="text-xl font-bold">PortfolioEngine</span>
+        <span className="text-xl font-bold"><a href="/">DeployMe</a></span>
       </div>
 
       <div className="hidden items-center gap-8 md:flex">
-        <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Features
         </a>
-        <a href="#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Templates
         </a>
-        <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Pricing
         </a>
-        <a href="#docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        {/* <a href="#docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Docs
-        </a>
+        </a> */}
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm">
-          Login
-        </Button>
-        <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-black">
-          Register
-        </Button>
+        <a href="/auth/login">
+          <Button variant="ghost" size="sm">
+            Login
+          </Button>
+        </a>
+
+        <a href="/auth/register">
+          <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-black">
+            Register
+          </Button>
+        </a>
+
       </div>
     </nav>
   )

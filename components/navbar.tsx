@@ -26,17 +26,15 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <a href="/auth/login">
-          <Button variant="ghost" size="sm">
-            Login
-          </Button>
-        </a>
+        <Button variant="ghost" size="sm">
+          <a href="/auth/login">Login</a>
+        </Button>
 
-        <a href="/auth/register">
-          <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-black">
-            Register
-          </Button>
-        </a>
+
+        <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-black">
+          <a href="/auth/register">Register</a>
+        </Button>
+
 
       </div>
     </nav>

@@ -3,6 +3,8 @@
 import type React from "react"
 
 import { useState } from "react"
+import { supabase } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,15 +14,29 @@ import { ArrowRight, Lock, Mail } from "lucide-react"
 import { CursorAnimation } from "@/components/cursor-animation"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [Loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    // TODO: Add authentication logic
-    setTimeout(() => setIsLoading(false), 1000)
+    setLoading(true)
+    setError(null)
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    setLoading(false)
+
+    if (error) {
+      setError(error.message)
+    } else {
+      router.push('/dashboard') // or wherever
+    }
   }
 
   return (
@@ -33,7 +49,7 @@ export default function LoginPage() {
       </div>
 
       <Card className="px-0 border-cyan-500/20 bg-card/50 backdrop-blur-sm">
-        <form onSubmit={handleSubmit} className="space-y-6 p-6">
+        <form onSubmit={handleLogin} className="space-y-6 p-6">
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-cyan-400" />
@@ -66,13 +82,14 @@ export default function LoginPage() {
             />
           </div>
 
+          {error && <p className="text-red">{error}</p>}
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={Loading}
             className="w-full group bg-cyan-500 hover:bg-cyan-600 text-black text-base py-6"
           >
-            {isLoading ? "Signing in..." : "Sign In"}
-            {!isLoading && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
+            {Loading ? "Signing in..." : "Sign In"}
+            {!Loading && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
           </Button>
 
           <div className="relative">

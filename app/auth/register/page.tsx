@@ -3,6 +3,8 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/utils/supabase/client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +13,8 @@ import { Card } from "@/components/ui/card"
 import { ArrowRight, User, Mail, Lock, MapPin, FileText, Github, Linkedin } from "lucide-react"
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     username: "",
     fullName: "",
@@ -27,7 +31,7 @@ export default function RegisterPage() {
     },
   })
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [Loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
@@ -54,12 +58,60 @@ export default function RegisterPage() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    // TODO: Add registration logic
-    setTimeout(() => setIsLoading(false), 1000)
+    setLoading(true)
+    setError(null)
+
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          username: formData.username.toLowerCase().trim(),
+          full_name: formData.fullName,
+        },
+      },
+    })
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          email: formData.email,
+          username: formData.username,
+          full_name: formData.fullName,
+          bio: formData.bio,
+          location: formData.location,
+          social_links: formData.socialLinks,
+        })
+
+      if (profileError) {
+        setError(profileError.message)
+        setLoading(false)
+        return
+      }
+    }
+
+    setLoading(false)
+    router.push('/dashboard')
+    router.refresh()
   }
+
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   setLoading(true)
+  //   // TODO: Add registration logic
+  //   setTimeout(() => setLoading(false), 1000)
+  // }
 
   return (
     <div className="w-full max-w-2xl mt-5">
@@ -69,7 +121,7 @@ export default function RegisterPage() {
       </div>
 
       <Card className="px-0 border-cyan-500/20 bg-card/50 backdrop-blur-sm">
-        <form onSubmit={handleSubmit} className="space-y-6 p-6 md:p-8">
+        <form onSubmit={handleRegister} className="space-y-6 p-6 md:p-8">
           {/* Personal Information */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-cyan-400">Personal Information</h3>
@@ -160,6 +212,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               rows={3}
               className="w-full rounded-md border border-cyan-500/20 bg-input/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-cyan-500/50 focus-visible:outline-none"
+              required
             />
           </div>
 
@@ -276,14 +329,15 @@ export default function RegisterPage() {
             </p>
           </div>
 
+          {error && <p>{error}</p>}
           {/* Submit Button */}
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={Loading}
             className="w-full group bg-cyan-500 hover:bg-cyan-600 text-black text-base py-6"
           >
-            {isLoading ? "Creating Account..." : "Create Portfolio Account"}
-            {!isLoading && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
+            {Loading ? "Creating Account..." : "Create Portfolio Account"}
+            {!Loading && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
           </Button>
 
           <div className="relative">
@@ -294,6 +348,8 @@ export default function RegisterPage() {
               <span className="bg-card px-2 text-muted-foreground">Already have an account?</span>
             </div>
           </div>
+
+          
 
           <Button
             type="button"

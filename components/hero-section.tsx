@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Terminal } from "lucide-react"
+import Link from "next/link"
 
 export function HeroSection() {
   return (
@@ -25,7 +26,7 @@ export function HeroSection() {
 
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Button size="lg" className="group bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
-            Start Building – It's Free
+            <Link href="/dashboard">Start Building - It's Free</Link>
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
           <Button

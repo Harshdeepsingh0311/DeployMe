@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Github, Twitter } from "lucide-react"
+import Link from "next/link"
 
 export function Footer() {
   return (
@@ -9,14 +10,14 @@ export function Footer() {
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to build your portfolio?</h2>
           <p className="mb-8 text-lg text-muted-foreground">Join thousands of developers showcasing their work</p>
           <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
-            Build Your Portfolio Now
+            <Link href={"/dashboard"}>Build Your Portfolio Now</Link>
           </Button>
         </div>
 
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-md bg-cyan-500" />
-            <span className="text-xl font-bold">PortfolioEngine</span>
+            <span className="text-xl font-bold"><Link href={"/"}>DeployMe</Link></span>
           </div>
 
           <div className="flex items-center gap-6">
@@ -45,7 +46,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          © 2025 PortfolioEngine. Built for developers, by developers.
+          © 2025 DeployMe. Built for developers, by developers.
         </div>
       </div>
     </footer>

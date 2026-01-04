@@ -7,7 +7,7 @@ const plans = [
     price: "$0",
     description: "Perfect for getting started",
     features: [
-      "Subdomain (yourname.portfolioengine.dev)",
+      "Subdomain (yourname.deployme.dev)",
       "3 projects",
       "Markdown editor",
       "Dark mode",
@@ -18,7 +18,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$9",
+    price: "$5",
     period: "/month",
     description: "For professionals who mean business",
     features: [

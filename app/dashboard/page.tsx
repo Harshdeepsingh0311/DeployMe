@@ -38,8 +38,6 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <Navbar />
-      <CursorAnimation />
       <DashboardClient profile={profile}/>
     </div>
   

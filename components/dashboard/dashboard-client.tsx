@@ -138,9 +138,6 @@ export default function DashboardClient({profile}: Props) {
 
           {/* Submit Button */}
           <div className="flex gap-3 justify-end pt-4">
-            <Button type="button" variant="outline" className="border-cyan-500/30 hover:bg-cyan-500/10 bg-transparent">
-              Save as Draft
-            </Button>
             <Button type="submit" disabled={isLoading} className="group bg-cyan-500 hover:bg-cyan-600 text-black px-6">
               {isLoading ? "Updating..." : "Update Portfolio"}
               {!isLoading && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}

@@ -29,13 +29,7 @@ export function HeroSection() {
             <Link href="/dashboard">Start Building - It's Free</Link>
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="text-lg px-8 border-cyan-500/30 hover:bg-cyan-500/10 bg-transparent"
-          >
-            Claim Your URL
-          </Button>
+          
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground">

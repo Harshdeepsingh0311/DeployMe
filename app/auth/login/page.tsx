@@ -42,7 +42,6 @@ export default function LoginPage() {
   return (
     
     <div className="w-full max-w-md">
-      <CursorAnimation />
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
         <p className="text-muted-foreground">Sign in to your portfolio and continue building</p>

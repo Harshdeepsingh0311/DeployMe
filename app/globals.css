@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+::selection {
+  background-color: hsl(180, 81%, 14%);
+  color: hsl(180, 100%, 70%);
+}
+
+
 :root {
   --background: oklch(0.98 0.005 240);
   --foreground: oklch(0.15 0.01 240);

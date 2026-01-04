@@ -59,51 +59,91 @@ export default function RegisterPage() {
   }
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  e.preventDefault()
+  setLoading(true)
+  setError(null)
 
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-      options: {
-        data: {
-          username: formData.username.toLowerCase().trim(),
-          full_name: formData.fullName,
-        },
-      },
-    })
+  const username = formData.username.toLowerCase().trim()
 
-    if (error) {
-      setError(error.message)
+  // 1️⃣ Resume validation
+  if (formData.resume) {
+    if (formData.resume.type !== "application/pdf") {
+      setError("Only PDF resumes are allowed")
       setLoading(false)
       return
     }
 
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
-          email: formData.email,
-          username: formData.username,
-          full_name: formData.fullName,
-          bio: formData.bio,
-          location: formData.location,
-          social_links: formData.socialLinks,
-        })
-
-      if (profileError) {
-        setError(profileError.message)
-        setLoading(false)
-        return
-      }
+    if (formData.resume.size > 10 * 1024 * 1024) {
+      setError("Resume must be under 10MB")
+      setLoading(false)
+      return
     }
-
-    setLoading(false)
-    router.push('/dashboard')
-    router.refresh()
   }
+
+  // 2️⃣ Signup
+  const { data, error } = await supabase.auth.signUp({
+    email: formData.email,
+    password: formData.password,
+    options: {
+      data: {
+        username,
+        full_name: formData.fullName,
+      },
+    },
+  })
+
+  if (error || !data.user) {
+    setError(error?.message || "Signup failed")
+    setLoading(false)
+    return
+  }
+
+  let resumeUrl: string | null = null
+
+  // 3️⃣ Upload resume
+  if (formData.resume) {
+    resumeUrl = `${data.user.id}/resume.pdf`
+
+    const { error: uploadError } = await supabase.storage
+      .from("resume")
+      .upload(resumeUrl, formData.resume, {
+        upsert: true,
+        contentType: "application/pdf",
+      })
+
+    if (uploadError) {
+      setError(uploadError.message)
+      setLoading(false)
+      return
+    }
+  }
+
+  // 4️⃣ Create profile
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .insert({
+      id: data.user.id,
+      email: formData.email,
+      username,
+      full_name: formData.fullName,
+      bio: formData.bio,
+      location: formData.location,
+      social_links: formData.socialLinks,
+      resume_url: resumeUrl, // ✅ renamed here
+    })
+
+  if (profileError) {
+    setError(profileError.message)
+    setLoading(false)
+    return
+  }
+
+  // 5️⃣ Redirect
+  setLoading(false)
+  router.push("/dashboard")
+  router.refresh()
+}
+
 
 
   // const handleSubmit = async (e: React.FormEvent) => {

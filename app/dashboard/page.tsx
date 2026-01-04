@@ -1,40 +1,47 @@
 import { redirect } from 'next/navigation'
 import { createSupabaseServerClient } from '@/utils/supabase/server'
-import { LogoutButton } from '@/components/logout-button'
+import DashboardClient from '@/components/dashboard/dashboard-client'
 import { Navbar } from '@/components/navbar'
 import { CursorAnimation } from '@/components/cursor-animation'
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient()
 
-  // 1. Get logged-in user
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // 2. If not logged in → redirect
-  if (!user) {
-    redirect('/auth/login')
-  }
+  if (!user) redirect('/auth/login')
 
-  // 3. Fetch username from profiles table
   const { data: profile } = await supabase
     .from('profiles')
-    .select('username')
+    .select('id, username, full_name, resume_url')
     .eq('id', user.id)
     .single()
+
+  // ✅ HARD GUARANTEE
+  if (!profile) {
+    redirect('/auth/login') // or onboarding page
+  }
+
+  let resumeSignedUrl: string | null = null
+
+  if (profile.resume_url) {
+    const { data } = await supabase.storage
+      .from("resume")
+      .createSignedUrl(profile.resume_url, 60) // 60 seconds
+
+    resumeSignedUrl = data?.signedUrl ?? null
+  }
+
+  profile.resume_url = resumeSignedUrl
 
   return (
     <div>
       <Navbar />
       <CursorAnimation />
-      <div className="p-8">
-      <h1 className="text-2xl font-semibold">
-        Hi, {profile?.username}
-      </h1>
-      <LogoutButton />
+      <DashboardClient profile={profile}/>
     </div>
-    </div>
-    
-  )
+  
+)
 }

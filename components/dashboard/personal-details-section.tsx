@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { User, Mail, Lock, MapPin, FileText, Github, Linkedin } from "lucide-react"
+import { toast } from "../ui/use-toast"
 
 interface PersonalDetailsProps {
   data: {
@@ -249,6 +250,17 @@ export default function PersonalDetailsSection({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-cyan-400 hover:underline"
+                onClick={() => {
+                  try {
+                    window.open("/api/view/resume", "_blank")
+                  } catch {
+                    toast({
+                      title: "Resume expired",
+                      description: "Please try again.",
+                    })
+                  }
+
+                }}
               >
                 View Current Resume
               </a>
@@ -276,7 +288,7 @@ export default function PersonalDetailsSection({
         </div>
 
         {/* Password */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="password" className="flex items-center gap-2">
             <Lock className="h-4 w-4 text-cyan-400" />
             Password
@@ -292,7 +304,7 @@ export default function PersonalDetailsSection({
             className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50"
           />
           <p className="text-xs text-muted-foreground">At least 8 characters with uppercase, lowercase, and numbers</p>
-        </div>
+        </div> */}
       </div>
     </Card>
   )

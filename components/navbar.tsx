@@ -47,6 +47,16 @@ export function Navbar() {
         <Link href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Pricing
         </Link>
+        {session ? (
+          <>
+            <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Dashboard
+            </Link>
+            <Link href="/#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Portfolio Preview
+            </Link>
+          </>
+        ) : (<></>)}
       </div>
 
       <div className="flex items-center gap-3">

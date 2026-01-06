@@ -89,24 +89,107 @@ export default function DashboardClient({
     })
   }, [profile, skills, experience, projects])
 
+  //FIle Uploads
+  const uploadResume = async (file: File) => {
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("profileId", profile.id)
+
+  const res = await fetch("/api/upload/resume", {
+  method: "POST",
+  body: formData,
+  credentials: "include",
+})
+
+
+  if (!res.ok) throw new Error("Resume upload failed")
+
+  const data = await res.json()
+  return data.url
+}
+
+
+  const uploadProjectImage = async (projectId: string, file: File) => {
+    const formData = new FormData()
+    formData.append("file", file)
+    formData.append("projectId", projectId)
+
+    const res = await fetch("/api/upload/project-image", {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    })
+
+    if (!res.ok) throw new Error("Project image upload failed")
+
+    const data = await res.json()
+    return data.url
+  }
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    const res = await fetch("/api/portfolio/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(portfolioData),
-    })
+    try {
+      let updatedData = structuredClone(portfolioData)
 
-    setIsLoading(false)
 
-    if (res.ok) {
-      alert("Profile Updated!")
-    } else {
-      alert("Update failed")
+      /* ---------- RESUME UPLOAD ---------- */
+      if (portfolioData.personal.resume) {
+        await uploadResume(portfolioData.personal.resume)
+        // store only path (signed URL generated on server)
+        updatedData.personal.resume = null
+      }
+
+      /* ---------- PROJECT IMAGE UPLOAD ---------- */
+      // for (let i = 0; i < updatedData.projects.length; i++) {
+      //   const project = updatedData.projects[i]
+
+      //   if (project.image && project.id) {
+      //     const imageUrl = await uploadProjectImage(project.id, project.image)
+      //     updatedData.projects[i] = {
+      //       ...project,
+      //       image_url: imageUrl,
+      //       image: null,
+      //     }
+      //   }
+      // }
+
+      /* ---------- FINAL DB UPDATE ---------- */
+      const res = await fetch("/api/portfolio/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      })
+
+      if (!res.ok) throw new Error("Update failed")
+
+      for (const project of portfolioData.projects) {
+        if (project.image && typeof project.id === "string") {
+          await uploadProjectImage(project.id, project.image)
+        }
+      }
+
+
+      toast({
+        title: "Portfolio updated",
+        description: "Your changes have been saved successfully.",
+      })
+
+    } catch (err) {
+      console.error(err)
+      toast({
+        title: "Update failed",
+        description: "Please try again.",
+        variant: "destructive",
+      })
+
+    } finally {
+      setIsLoading(false)
     }
   }
+
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-12">

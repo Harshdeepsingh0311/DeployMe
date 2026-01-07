@@ -1,30 +1,69 @@
-"use client"
+import { notFound } from "next/navigation"
+import { createSupabaseServerClient } from "@/utils/supabase/server"
+import PortfolioClient from "@/components/portfolio/portfolio-client"
 
-import { PortfolioNav } from "@/components/portfolio/nav"
-import { PortfolioAbout } from "@/components/portfolio/about"
-import { PortfolioExperience } from "@/components/portfolio/experience"
-import { PortfolioProjects } from "@/components/portfolio/projects"
-import { PortfolioSkills } from "@/components/portfolio/skills"
-import { PortfolioFooter } from "@/components/portfolio/footer"
+export default async function PortfolioPage({
+  params,
+}: {
+  params: Promise<{ username: string }>
+}) {
+  const { username } = await params
+  const supabase = await createSupabaseServerClient()
 
-export default function PortfolioPage() {
+  /* ---------------- PROFILE ---------------- */
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username", username.toLowerCase())
+    .maybeSingle()
+
+  if (!profile) notFound()
+
+  /* ---------------- EXPERIENCES ---------------- */
+  const { data: experiences } = await supabase
+    .from("experience")
+    .select("id, role, company, start_date, end_date, description")
+    .eq("profile_id", profile.id)
+    .order("start_date", { ascending: false })
+
+  // console.log(experiences)
+
+  /* ---------------- PROJECTS ---------------- */
+  const { data: projects } = await supabase
+    .from("projects")
+    .select("id, title, description, image_url, git_link, live_link, tech_stack")
+    .eq("profile_id", profile.id)
+
+  /* ---------------- SKILLS ---------------- */
+  const { data: skills } = await supabase
+    .from("skills")
+    .select("id, name")
+    .eq("profile_id", profile.id)
+
+  /* ---------------- NORMALIZE & RENDER ---------------- */
   return (
-    <div className="relative min-h-screen bg-black text-white">
-      <div className="fixed inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-3xl"></div>
-      </div>
+    <PortfolioClient
+      profile={{
+        id: profile.id,
+        username: profile.username,
 
-      <div className="relative z-10">
-        <PortfolioNav />
-        <main className="max-w-6xl mx-auto px-6 py-20">
-          <PortfolioAbout />
-          <PortfolioExperience />
-          <PortfolioProjects />
-          <PortfolioSkills />
-        </main>
-        <PortfolioFooter />
-      </div>
-    </div>
+        /* 🔑 NORMALIZED FIELDS */
+        name: profile.full_name,
+        bio: profile.bio,
+        location: profile.location,
+        resume_url: profile.resume_url,
+
+        social_links: {
+          mail: profile.social_links?.email,
+          github: profile.social_links?.github,
+          leetcode: profile.social_links?.leetcode,
+          linkedin: profile.social_links?.linkedin,
+        },
+
+        experiences: experiences ?? [],
+        projects: projects ?? [],
+        skills: skills ?? [],
+      }}
+    />
   )
 }

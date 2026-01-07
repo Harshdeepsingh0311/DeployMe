@@ -8,6 +8,7 @@ import SkillsSection from "@/components/dashboard/skills-section"
 import ExperienceSection from "@/components/dashboard/experience-section"
 import ProjectsSection from "@/components/dashboard/projects-section"
 import { toast } from "@/components/ui/use-toast"
+import Link from "next/link"
 
 /* ================= TYPES ================= */
 
@@ -202,6 +203,15 @@ export default function DashboardClient({
           <p className="text-muted-foreground">
             Create and customize your professional portfolio
           </p>
+          <Link href={`/portfolio/${profile.username}`}>
+            <Button
+              type="button"
+              className="bg-cyan-500 hover:bg-cyan-600 text-black mt-5"
+            >
+              View Portfolio
+            </Button>
+          </Link>
+
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">

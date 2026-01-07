@@ -52,9 +52,9 @@ export function Navbar() {
             <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Dashboard
             </Link>
-            <Link href="/#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {/* <Link href="/#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Portfolio Preview
-            </Link>
+            </Link> */}
           </>
         ) : (<></>)}
       </div>

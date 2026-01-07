@@ -12,7 +12,9 @@ interface Project {
   title: string
   description: string
   image: File | null
-  technologies: string[]
+  tech_stack: string[]
+  git_link: string | null
+  live_link: string | null
 }
 
 interface ProjectsSectionProps {
@@ -35,7 +37,9 @@ export default function ProjectsSection({
         title: "",
         description: "",
         image: null,
-        technologies: [],
+        tech_stack: [],
+        git_link: "",
+        live_link: ""
       },
     ])
   }
@@ -63,8 +67,8 @@ export default function ProjectsSection({
     const tech = techInput[projectIndex]?.trim()
     if (!tech) return
 
-    updateProject(projectIndex, "technologies", [
-      ...projects[projectIndex].technologies,
+    updateProject(projectIndex, "tech_stack", [
+      ...projects[projectIndex].tech_stack,
       tech,
     ])
 
@@ -75,8 +79,8 @@ export default function ProjectsSection({
   const removeTechnology = (projectIndex: number, techIndex: number) => {
     updateProject(
       projectIndex,
-      "technologies",
-      projects[projectIndex].technologies.filter((_, i) => i !== techIndex)
+      "tech_stack",
+      projects[projectIndex].tech_stack.filter((_, i) => i !== techIndex)
     )
   }
 
@@ -146,6 +150,33 @@ export default function ProjectsSection({
                 />
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>GitHub Link</Label>
+                  <Input
+                    placeholder="https://github.com/username/repo"
+                    value={project.git_link ?? ""}
+                    onChange={(e) =>
+                      updateProject(index, "git_link", e.target.value)
+                    }
+                    className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Live Demo Link</Label>
+                  <Input
+                    placeholder="https://your-project.vercel.app"
+                    value={project.live_link ?? ""}
+                    onChange={(e) =>
+                      updateProject(index, "live_link", e.target.value)
+                    }
+                    className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50"
+                  />
+                </div>
+              </div>
+
+
               {/* Technologies */}
               <div className="space-y-2">
                 <Label>Technologies Used</Label>
@@ -178,9 +209,9 @@ export default function ProjectsSection({
                   </Button>
                 </div>
 
-                {project.technologies.length > 0 && (
+                {project.tech_stack.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech, techIndex) => (
+                    {project.tech_stack.map((tech, techIndex) => (
                       <div
                         key={techIndex}
                         className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-sm"

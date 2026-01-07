@@ -12,6 +12,8 @@ export default function PortfolioBuilderPage() {
   return (
     <div className="relative min-h-screen bg-background">
       <main>
+        <Navbar />
+        <CursorAnimation />
         <HeroSection />
         <FeaturesGrid />
         <SocialProof />

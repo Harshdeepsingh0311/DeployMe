@@ -60,22 +60,28 @@ export default async function DashboardPage() {
 
   /* ---------- PROJECTS ---------- */
   const { data: projects } = await supabase
-    .from("projects")
-    .select(`
-      id,
-      title,
-      description,
-      tech_stack
-    `)
-    .eq("profile_id", profile.id)
+  .from("projects")
+  .select(`
+    id,
+    title,
+    description,
+    tech_stack,
+    git_link,
+    live_link
+  `).eq("profile_id", profile.id)
 
   const normalizedProjects =
-    projects?.map((p) => ({
-      id: p.id,
-      title: p.title,
-      description: p.description,
-      technologies: p.tech_stack ?? [],
-    })) ?? []
+  projects?.map((p) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    image: null,
+    tech_stack: p.tech_stack ?? [],
+    git_link: p.git_link ?? null,
+    live_link: p.live_link ?? null,
+  })) ?? []
+
+
 
 
   const normalizedExperience =

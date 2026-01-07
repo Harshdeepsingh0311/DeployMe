@@ -9,6 +9,18 @@ import ExperienceSection from "@/components/dashboard/experience-section"
 import ProjectsSection from "@/components/dashboard/projects-section"
 import { toast } from "@/components/ui/use-toast"
 
+/* ================= TYPES ================= */
+
+interface Project {
+  id?: string
+  title: string
+  description: string
+  image: File | null
+  tech_stack: string[]
+  git_link: string | null
+  live_link: string | null
+}
+
 interface PortfolioData {
   personal: {
     username: string
@@ -27,14 +39,14 @@ interface PortfolioData {
   }
   skills: { id?: string; name: string }[]
   experience: any[]
-  projects: any[]
+  projects: Project[]
 }
 
 type Props = {
   profile: any
-  skills: any[]
+  skills: { id: string; name: string }[]
   experience: any[]
-  projects: any[]
+  projects: Project[]
 }
 
 export default function DashboardClient({
@@ -66,6 +78,8 @@ export default function DashboardClient({
 
   const [isLoading, setIsLoading] = useState(false)
 
+  /* ================= PREFILL ================= */
+
   useEffect(() => {
     setPortfolioData({
       personal: {
@@ -89,25 +103,24 @@ export default function DashboardClient({
     })
   }, [profile, skills, experience, projects])
 
-  //FIle Uploads
+  /* ================= UPLOAD HELPERS ================= */
+
   const uploadResume = async (file: File) => {
-  const formData = new FormData()
-  formData.append("file", file)
-  formData.append("profileId", profile.id)
+    const formData = new FormData()
+    formData.append("file", file)
+    formData.append("profileId", profile.id)
 
-  const res = await fetch("/api/upload/resume", {
-  method: "POST",
-  body: formData,
-  credentials: "include",
-})
+    const res = await fetch("/api/upload/resume", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    })
 
+    if (!res.ok) throw new Error("Resume upload failed")
 
-  if (!res.ok) throw new Error("Resume upload failed")
-
-  const data = await res.json()
-  return data.url
-}
-
+    const data = await res.json()
+    return data.url
+  }
 
   const uploadProjectImage = async (projectId: string, file: File) => {
     const formData = new FormData()
@@ -117,7 +130,7 @@ export default function DashboardClient({
     const res = await fetch("/api/upload/project-image", {
       method: "POST",
       body: formData,
-      credentials: "include"
+      credentials: "include",
     })
 
     if (!res.ok) throw new Error("Project image upload failed")
@@ -126,37 +139,22 @@ export default function DashboardClient({
     return data.url
   }
 
+  /* ================= SUBMIT ================= */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      let updatedData = structuredClone(portfolioData)
+      const updatedData: PortfolioData = structuredClone(portfolioData)
 
-
-      /* ---------- RESUME UPLOAD ---------- */
+      /* ---------- RESUME ---------- */
       if (portfolioData.personal.resume) {
         await uploadResume(portfolioData.personal.resume)
-        // store only path (signed URL generated on server)
         updatedData.personal.resume = null
       }
 
-      /* ---------- PROJECT IMAGE UPLOAD ---------- */
-      // for (let i = 0; i < updatedData.projects.length; i++) {
-      //   const project = updatedData.projects[i]
-
-      //   if (project.image && project.id) {
-      //     const imageUrl = await uploadProjectImage(project.id, project.image)
-      //     updatedData.projects[i] = {
-      //       ...project,
-      //       image_url: imageUrl,
-      //       image: null,
-      //     }
-      //   }
-      // }
-
-      /* ---------- FINAL DB UPDATE ---------- */
+      /* ---------- DB UPDATE ---------- */
       const res = await fetch("/api/portfolio/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -165,18 +163,21 @@ export default function DashboardClient({
 
       if (!res.ok) throw new Error("Update failed")
 
+      /* ---------- PROJECT IMAGES (ISSUE #3 FIX) ---------- */
       for (const project of portfolioData.projects) {
-        if (project.image && typeof project.id === "string") {
+        if (
+          project.image &&
+          typeof project.id === "string" &&
+          project.id.length > 0
+        ) {
           await uploadProjectImage(project.id, project.image)
         }
       }
-
 
       toast({
         title: "Portfolio updated",
         description: "Your changes have been saved successfully.",
       })
-
     } catch (err) {
       console.error(err)
       toast({
@@ -184,12 +185,12 @@ export default function DashboardClient({
         description: "Please try again.",
         variant: "destructive",
       })
-
     } finally {
       setIsLoading(false)
     }
   }
 
+  /* ================= UI ================= */
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-12">
@@ -199,7 +200,7 @@ export default function DashboardClient({
             Hi, {profile.full_name}
           </h1>
           <p className="text-muted-foreground">
-            Create and customize your professional portfolio with all your achievements
+            Create and customize your professional portfolio
           </p>
         </div>
 

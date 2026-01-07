@@ -24,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`font-sans antialiased`}>
-        <Navbar />
-        <Toaster />
+        {/* <Navbar />
+        <Toaster /> */}
         {children}
-        <CursorAnimation />
+        {/* <CursorAnimation /> */}
       </body>
     </html>
   )

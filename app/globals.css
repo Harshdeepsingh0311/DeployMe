@@ -3,9 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-::selection {
-  background-color: hsl(180, 81%, 14%);
-  color: hsl(180, 100%, 70%);
+html {
+  scroll-behavior: smooth;
 }
 
 
@@ -78,6 +77,17 @@
   --sidebar-accent-foreground: oklch(0.95 0.005 240);
   --sidebar-border: oklch(0.2 0.01 240);
   --sidebar-ring: oklch(0.4 0.01 240);
+}
+
+/* Updated portfolio theme to match main site's cyan color scheme */
+[class*="portfolio"] {
+  --portfolio-bg: oklch(0.08 0.01 240);
+  --portfolio-bg-secondary: oklch(0.12 0.01 240);
+  --portfolio-accent: oklch(0.65 0.18 195);
+  --portfolio-accent-light: oklch(0.72 0.16 190);
+  --portfolio-text: oklch(0.95 0.005 240);
+  --portfolio-text-muted: oklch(0.6 0.01 240);
+  --portfolio-border: oklch(0.15 0.01 240);
 }
 
 @theme inline {

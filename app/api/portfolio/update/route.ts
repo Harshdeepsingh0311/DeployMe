@@ -135,31 +135,26 @@ export async function POST(req: Request) {
             await supabase.from("projects").delete().in("id", projToDelete)
         }
 
-        const projToInsert = projects.filter((p: any) => !p.id)
+        const projToUpdate = projects.filter((p: any) => p.id)
 
-        if (projToInsert.length > 0) {
-            const { error: projectError } = await supabase
+        for (const p of projToUpdate) {
+            const { error } = await supabase
                 .from("projects")
-                .insert(
-                    projToInsert.map((p: any) => ({
-                        profile_id: profileId,
-                        title: p.title,
-                        description: p.description,
-                        tech_stack: Array.isArray(p.technologies)
-                            ? p.technologies
-                            : [],
-                    }))
-                )
+                .update({
+                    title: p.title,
+                    description: p.description,
+                    tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack : [],
+                    git_link: p.git_link || null,
+                    live_link: p.live_link || null,
+                })
+                .eq("id", p.id)
 
-            if (projectError) {
-                console.error("❌ PROJECT INSERT ERROR:", projectError)
-                return NextResponse.json(
-                    { error: projectError.message },
-                    { status: 500 }
-                )
+            if (error) {
+                console.error("❌ PROJECT UPDATE ERROR:", error)
+                return NextResponse.json({ error: error.message }, { status: 500 })
             }
-
         }
+
 
         return NextResponse.json({ success: true })
     } catch (err) {

@@ -1,6 +1,69 @@
 import { notFound } from "next/navigation"
 import { createSupabaseServerClient } from "@/utils/supabase/server"
 import PortfolioClient from "@/components/portfolio/portfolio-client"
+import { Metadata } from "next";
+// import { getProfileByUsername } from "@/utils/data";
+
+export async function generateMetadata(
+  { params }: { params: { username: string } }
+): Promise<Metadata> {
+  const { username } = await params
+  const supabase = await createSupabaseServerClient()
+
+  /* ---------------- PROFILE ---------------- */
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username", username.toLowerCase())
+    .maybeSingle()
+  // const profile = await getProfileByUsername(params.username);
+
+  if (!profile) {
+    return {
+      title: "Portfolio not found",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const fullName = profile.full_name;
+
+  const description =
+    profile.bio ??
+    `${fullName} | View projects, skills, and experience.`;
+
+  const url = `https://localhost:3000/${profile.username}`;
+
+  return {
+    title: `${fullName} | Portfolio`,
+    description,
+    alternates: {
+      canonical: url
+    },
+
+    openGraph: {
+      title: `${fullName} | Portfolio`,
+      description,
+      url,
+      type: "profile",
+      images: [
+        {
+          url: "https://localhost:3000/og-default.png",
+          width: 1200,
+          height: 630
+        }
+      ]
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: `${fullName} | Portfolio`,
+      description
+    }
+  };
+}
+
+
+
 
 export default async function PortfolioPage({
   params,
@@ -18,6 +81,17 @@ export default async function PortfolioPage({
     .maybeSingle()
 
   if (!profile) notFound()
+
+  let resumeUrl: string | null = null;
+
+  if (profile?.resume_url) {
+    const { data } = supabase
+      .storage
+      .from("resume")
+      .getPublicUrl(profile.resume_url);
+
+    resumeUrl = data.publicUrl;
+  }
 
   /* ---------------- EXPERIENCES ---------------- */
   const { data: experiences } = await supabase
@@ -51,7 +125,7 @@ export default async function PortfolioPage({
         name: profile.full_name,
         bio: profile.bio,
         location: profile.location,
-        resume_url: profile.resume_url,
+        resume_url: resumeUrl,
 
         social_links: {
           mail: profile.social_links?.email,

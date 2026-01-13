@@ -66,16 +66,22 @@ export default function PortfolioClient({
 
       {/* Content */}
       <div className="relative z-10">
-        <PortfolioNav profile={profile} />
+        <header>
+          <PortfolioNav profile={profile} />
+        </header>
 
         <main className="max-w-6xl mx-auto px-6 py-20">
-          <PortfolioAbout profile={profile} />
-          <PortfolioExperience experiences={profile.experiences} />
-          <PortfolioProjects projects={profile.projects} />
-          <PortfolioSkills skills={profile.skills} />
+          <section>
+            <PortfolioAbout profile={profile} />
+          </section>
+          <section><PortfolioExperience experiences={profile.experiences} /></section>
+          <section><PortfolioProjects projects={profile.projects} /></section>
+          <section><PortfolioSkills skills={profile.skills} /></section>
+
         </main>
 
-        <PortfolioFooter profile={profile} />
+        <footer><PortfolioFooter profile={profile} /></footer>
+        
       </div>
     </div>
   )

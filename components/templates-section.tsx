@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const templates = [
   {
@@ -43,10 +44,12 @@ export function TemplatesSection() {
           {templates.map((template, index) => (
             <div key={index} className="group overflow-hidden rounded-lg border border-border bg-card">
               <div className="aspect-video overflow-hidden bg-muted">
-                <img
+                <Image
                   src={template.preview || "/placeholder.svg"}
-                  alt={template.name}
+                  alt={`${template.name} Template Screenshot`}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  width={1200}
+                  height={750}
                 />
               </div>
               <div className="p-6">

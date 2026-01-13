@@ -24,10 +24,10 @@ export function Footer() {
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Docs
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Templates
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </a>
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

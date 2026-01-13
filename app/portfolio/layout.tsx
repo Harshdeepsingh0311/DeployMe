@@ -1,5 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { CursorAnimation } from "@/components/cursor-animation"
 
 export const metadata: Metadata = {
   title: "Portfolio | PortfolioEngine",
@@ -13,6 +14,7 @@ export default function PortfolioLayout({
 }) {
   return (
     <div className="min-h-screen">
+      <CursorAnimation />
       {children}
     </div>
   )

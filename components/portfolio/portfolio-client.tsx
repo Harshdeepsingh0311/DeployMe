@@ -6,6 +6,7 @@ import { PortfolioExperience } from "@/components/portfolio/experience"
 import { PortfolioProjects } from "@/components/portfolio/projects"
 import { PortfolioSkills } from "@/components/portfolio/skills"
 import { PortfolioFooter } from "@/components/portfolio/footer"
+import { CursorAnimation } from "../cursor-animation"
 
 type SocialLinks = {
   mail?: string
@@ -66,6 +67,7 @@ export default function PortfolioClient({
 
       {/* Content */}
       <div className="relative z-10">
+        <CursorAnimation />
         <header>
           <PortfolioNav profile={profile} />
         </header>

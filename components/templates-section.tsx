@@ -6,19 +6,19 @@ import Image from "next/image"
 
 const templates = [
   {
-    name: "The Terminal",
-    description: "Monochrome, command-line inspired aesthetic",
-    preview: "/terminal-style-portfolio-with-monochrome-design.png",
-  },
-  {
     name: "The Modern Paper",
     description: "Clean, Swiss-inspired grid layout",
-    preview: "/minimalist-swiss-grid-portfolio-design.jpg",
+    preview: "/comingSoon.png",
+  },
+  {
+    name: "Dark Theme",
+    description: "Monochrome, Professional and Recruiter's favourite",
+    preview: "/darkPortfolio.png",
   },
   {
     name: "The Glass",
     description: "Glassmorphic UI with depth",
-    preview: "/glassmorphic-portfolio-with-blur-effects.jpg",
+    preview: "/comingSoon.png",
   },
 ]
 
@@ -31,13 +31,6 @@ export function TemplatesSection() {
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-4xl font-bold md:text-5xl">Minimalist Templates</h2>
           <p className="mb-8 text-lg text-muted-foreground">Start with a clean foundation. Switch themes instantly.</p>
-          <Button
-            variant="outline"
-            onClick={() => setDarkMode(!darkMode)}
-            className="border-cyan-500/30 hover:bg-cyan-500/10"
-          >
-            {darkMode ? "☀️" : "🌙"} Toggle {darkMode ? "Light" : "Dark"} Mode
-          </Button>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">

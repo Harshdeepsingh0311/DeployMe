@@ -12,25 +12,40 @@ export default function ResetPassword() {
   const [error, setError] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
 
-  // 🔑 THIS IS THE KEY PART
   useEffect(() => {
-    const exchange = async () => {
+    let active = true
+
+    const run = async () => {
+      const params = new URLSearchParams(window.location.search)
+
+      // ✅ Ensure this is a recovery link
+      if (params.get("type") !== "recovery") {
+        setError("Invalid password reset link.")
+        return
+      }
+
+      // ✅ Force logout to allow recovery session
+      await supabase.auth.signOut()
+
       const { error } =
-        await supabase.auth.exchangeCodeForSession(
-          window.location.href
-        )
+        await supabase.auth.exchangeCodeForSession(window.location.href)
+
+      if (!active) return
 
       if (error) {
-        console.error("Exchange failed:", error)
+        console.error(error)
         setError("Reset link is invalid or expired.")
         return
       }
 
-      // ✅ session is now created
       setReady(true)
     }
 
-    exchange()
+    run()
+
+    return () => {
+      active = false
+    }
   }, [])
 
   const handleUpdate = async () => {
@@ -49,7 +64,7 @@ export default function ResetPassword() {
     }
 
     alert("Password updated successfully.")
-    router.push("/login")
+    router.replace("/login")
   }
 
   if (!ready) {

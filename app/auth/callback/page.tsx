@@ -1,4 +1,3 @@
-// app/auth/callback/page.tsx
 "use client"
 
 import { supabase } from "@/utils/supabase/client"
@@ -9,9 +8,10 @@ export default function AuthCallback() {
   const router = useRouter()
 
   useEffect(() => {
-    supabase.auth.exchangeCodeForSession(window.location.href)
+    supabase.auth
+      .exchangeCodeForSession(window.location.href)
       .then(() => router.replace("/auth/reset-password"))
   }, [])
 
-  return <p>Verifying...</p>
+  return <p>Verifying reset link(callback)…</p>
 }

@@ -13,38 +13,14 @@ export default function ResetPassword() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const handleRecovery = async () => {
-      try {
-        const url = window.location.href
-
-        // 🔑 STEP 1: Exchange PKCE code (ONLY if present)
-        if (url.includes("code=")) {
-          const { error } =
-            await supabase.auth.exchangeCodeForSession(url)
-
-          if (error) {
-            console.error("PKCE exchange failed:", error)
-            setError("Reset link is invalid or expired.")
-            return
-          }
-        }
-
-        // 🔑 STEP 2: Verify session exists
-        const { data } = await supabase.auth.getSession()
-
-        if (!data.session) {
-          setError("Reset link is invalid or expired.")
-          return
-        }
-
+    // 🔑 Supabase auto-creates session for recovery links
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        setError("Reset link is invalid or expired.")
+      } else {
         setLoading(false)
-      } catch (err) {
-        console.error(err)
-        setError("Something went wrong.")
       }
-    }
-
-    handleRecovery()
+    })
   }, [])
 
   const handleUpdate = async () => {
@@ -66,12 +42,10 @@ export default function ResetPassword() {
     router.push("/login")
   }
 
-  // ⏳ Loading state
   if (loading && !error) {
     return <p className="text-center mt-20">Verifying reset link…</p>
   }
 
-  // ❌ Error state (NO redirect — important)
   if (error) {
     return (
       <div className="max-w-md mx-auto mt-20 text-center">
@@ -86,7 +60,6 @@ export default function ResetPassword() {
     )
   }
 
-  // ✅ Success state
   return (
     <div className="max-w-md mx-auto mt-20">
       <h1 className="text-xl font-semibold mb-4">Reset Password</h1>
@@ -99,10 +72,7 @@ export default function ResetPassword() {
         className="input w-full mb-3"
       />
 
-      <button
-        onClick={handleUpdate}
-        className="btn btn-primary w-full"
-      >
+      <button onClick={handleUpdate} className="btn btn-primary w-full">
         Update Password
       </button>
     </div>

@@ -13,14 +13,29 @@ export default function ResetPassword() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // 🔑 Supabase auto-creates session for recovery links
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        setError("Reset link is invalid or expired.")
-      } else {
+    // 1️⃣ Listen for recovery event
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        // ✅ Link is valid, user can reset password
         setLoading(false)
       }
     })
+
+    // 2️⃣ Fallback: if nothing happens after a short delay, mark invalid
+    const timeout = setTimeout(async () => {
+      const { data } = await supabase.auth.getSession()
+      if (!data.session) {
+        setError("Reset link is invalid or expired.")
+        setLoading(false)
+      }
+    }, 1500)
+
+    return () => {
+      subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
   }, [])
 
   const handleUpdate = async () => {
@@ -42,7 +57,7 @@ export default function ResetPassword() {
     router.push("/login")
   }
 
-  if (loading && !error) {
+  if (loading) {
     return <p className="text-center mt-20">Verifying reset link…</p>
   }
 
@@ -72,7 +87,10 @@ export default function ResetPassword() {
         className="input w-full mb-3"
       />
 
-      <button onClick={handleUpdate} className="btn btn-primary w-full">
+      <button
+        onClick={handleUpdate}
+        className="btn btn-primary w-full"
+      >
         Update Password
       </button>
     </div>

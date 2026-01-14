@@ -19,8 +19,6 @@ export default function ResetPassword() {
     let active = true
 
     const run = async () => {
-      // ✅ Ensure clean state (important)
-      await supabase.auth.signOut()
 
       // ✅ Exchange recovery code for session
       const { error } =

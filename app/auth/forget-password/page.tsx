@@ -12,7 +12,7 @@ export default function ForgotPassword() {
     setLoading(true)
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
+      redirectTo: `http://deployme-dev.vercel.app/auth/reset-password`,
     })
 
     setMessage("If an account with this email exists, a password reset link has been sent.")

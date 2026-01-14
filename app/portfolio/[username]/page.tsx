@@ -33,7 +33,7 @@ export async function generateMetadata(
     profile.bio ??
     `${fullName} | View projects, skills, and experience.`;
 
-  const url = `https://localhost:3000/${profile.username}`;
+  const url = `https://deployme-dev.vercel.app/${profile.username}`;
 
   return {
     title: `${fullName} | Portfolio`,
@@ -49,7 +49,7 @@ export async function generateMetadata(
       type: "profile",
       images: [
         {
-          url: "https://localhost:3000/og-default.png",
+          url: "https://deployme-dev.vercel.app/og-default.png",
           width: 1200,
           height: 630
         }

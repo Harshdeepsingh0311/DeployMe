@@ -3,7 +3,7 @@ import { getAllUsernames } from "@/utils/data";
 export default async function sitemap() {
   const usernames = await getAllUsernames();
 
-  const baseUrl = "https://localhost:3000";
+  const baseUrl = "https://deployme-dev.vercel.app";
 
   return [
     // Optional: homepage

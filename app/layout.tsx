@@ -11,7 +11,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 const title = "DeployMe - Your Portfolio, Engineered in Minutes";
 const description = "Build and share your professional portfolio with projects, skills, and experience.";
 
-const url = "https://localhost:3000";
+const url = "https://deployme-dev.vercel.app";
 
 export const metadata: Metadata = {
   title,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: url },
   openGraph: { title, description, url, type: "website", images: [
         {
-          url: "https://localhost:3000/og-default.png",
+          url: `${url}/og-default.png`,
           width: 1200,
           height: 630
         }

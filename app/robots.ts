@@ -12,6 +12,6 @@ export default function robots() {
         ],
       },
     ],
-    sitemap: "https://localhost:3000/sitemap.xml",
+    sitemap: "https://deployme-dev.vercel.app/sitemap.xml",
   };
 }

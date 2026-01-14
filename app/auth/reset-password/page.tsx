@@ -14,14 +14,15 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<any>(null)
 
+  // 🔐 Handle recovery + session creation
   useEffect(() => {
     let active = true
 
     const run = async () => {
-      // ✅ Clear any existing session
+      // ✅ Ensure clean state (important)
       await supabase.auth.signOut()
 
-      // ✅ Exchange code for recovery session
+      // ✅ Exchange recovery code for session
       const { error } =
         await supabase.auth.exchangeCodeForSession(window.location.href)
 
@@ -34,7 +35,7 @@ export default function ResetPassword() {
         return
       }
 
-      // ✅ Get the newly created recovery session
+      // ✅ Session now exists
       const { data } = await supabase.auth.getSession()
       setSession(data.session)
       setLoading(false)
@@ -45,6 +46,17 @@ export default function ResetPassword() {
     return () => {
       active = false
     }
+  }, [])
+
+  // 🔁 Keep session in sync (handles rerenders / layout changes)
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   const handleUpdate = async () => {
@@ -66,18 +78,21 @@ export default function ResetPassword() {
     router.replace("/auth/login")
   }
 
+  // ⏳ Loading state
   if (loading) {
     return <p className="text-center mt-20">Verifying reset link…</p>
   }
 
+  // ❌ Invalid or failed session
   if (!session) {
     return (
       <p className="text-center mt-20 text-red-500">
-        Invalid or expired password reset link.
+        Failed to verify reset link.
       </p>
     )
   }
 
+  // ✅ Reset password UI
   return (
     <div className="max-w-md mx-auto mt-20 text-center">
       <h1 className="text-xl font-semibold mb-4">Reset Password</h1>

@@ -22,7 +22,7 @@ export default function ResetPassword() {
 
         if (error) {
           console.error("Exchange failed:", error)
-          router.replace("/login")
+          router.replace("/auth/login")
           return
         }
       }
@@ -31,7 +31,7 @@ export default function ResetPassword() {
       const { data } = await supabase.auth.getSession()
 
       if (!data.session) {
-        router.replace("/login")
+        router.replace("/auth/login")
       } else {
         setLoading(false)
       }
@@ -52,7 +52,7 @@ export default function ResetPassword() {
       alert(error.message)
     } else {
       alert("Password updated successfully")
-      router.push("/login")
+      router.push("/auth/login")
     }
   }
 

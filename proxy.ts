@@ -4,6 +4,12 @@ import { createServerClient } from "@supabase/ssr"
 
 export function proxy(req: NextRequest) {
   // ✅ Allow API routes to pass through untouched
+  if (
+    req.nextUrl.pathname.startsWith("/auth/reset-password") ||
+    req.nextUrl.pathname.startsWith("/auth/forget-password")
+  ) {
+    return NextResponse.next()
+  }
   if (req.nextUrl.pathname.startsWith("/api")) {
     return NextResponse.next()
   }

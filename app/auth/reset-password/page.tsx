@@ -14,24 +14,14 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<any>(null)
 
-  // 🔐 Handle recovery + session creation
   useEffect(() => {
     let active = true
 
     const run = async () => {
-      const params = new URLSearchParams(window.location.search)
-
-      // ✅ Ensure this is a recovery link
-      if (params.get("type") !== "recovery") {
-        setError("Invalid password reset link.")
-        setLoading(false)
-        return
-      }
-
-      // ✅ Ensure clean state (important)
+      // ✅ Clear any existing session
       await supabase.auth.signOut()
 
-      // ✅ Exchange recovery code for session
+      // ✅ Exchange code for recovery session
       const { error } =
         await supabase.auth.exchangeCodeForSession(window.location.href)
 
@@ -44,7 +34,7 @@ export default function ResetPassword() {
         return
       }
 
-      // ✅ Session now exists
+      // ✅ Get the newly created recovery session
       const { data } = await supabase.auth.getSession()
       setSession(data.session)
       setLoading(false)
@@ -55,17 +45,6 @@ export default function ResetPassword() {
     return () => {
       active = false
     }
-  }, [])
-
-  // 🔁 Keep session in sync (handles rerenders / layout changes)
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-
-    return () => subscription.unsubscribe()
   }, [])
 
   const handleUpdate = async () => {
@@ -84,24 +63,21 @@ export default function ResetPassword() {
     }
 
     alert("Password updated successfully.")
-    router.replace("/login")
+    router.replace("/auth/login")
   }
 
-  // ⏳ Loading state
   if (loading) {
     return <p className="text-center mt-20">Verifying reset link…</p>
   }
 
-  // ❌ Invalid or failed session
   if (!session) {
     return (
       <p className="text-center mt-20 text-red-500">
-        Failed to verify reset link.
+        Invalid or expired password reset link.
       </p>
     )
   }
 
-  // ✅ Reset password UI
   return (
     <div className="max-w-md mx-auto mt-20 text-center">
       <h1 className="text-xl font-semibold mb-4">Reset Password</h1>

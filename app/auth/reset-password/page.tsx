@@ -11,16 +11,33 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(true)
 
-  // ✅ Just check if session exists
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    const handleRecovery = async () => {
+      const url = window.location.href
+
+      // ✅ Only exchange if code is present
+      if (url.includes("code=")) {
+        const { error } =
+          await supabase.auth.exchangeCodeForSession(url)
+
+        if (error) {
+          console.error("Exchange failed:", error)
+          router.replace("/login")
+          return
+        }
+      }
+
+      // ✅ NOW session should exist
+      const { data } = await supabase.auth.getSession()
+
       if (!data.session) {
-        // invalid or expired link
         router.replace("/login")
       } else {
         setLoading(false)
       }
-    })
+    }
+
+    handleRecovery()
   }, [router])
 
   const handleUpdate = async () => {
@@ -39,7 +56,7 @@ export default function ResetPassword() {
     }
   }
 
-  if (loading) return <p>Verifying reset link...</p>
+  if (loading) return <p>Verifying reset link…</p>
 
   return (
     <div>

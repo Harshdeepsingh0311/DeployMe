@@ -11,21 +11,16 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(true)
 
+  // ✅ Just check if session exists
   useEffect(() => {
-    const exchange = async () => {
-      const { error } = await supabase.auth.exchangeCodeForSession(
-        window.location.href
-      )
-
-      if (error) {
-        console.error(error)
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        // invalid or expired link
         router.replace("/login")
       } else {
         setLoading(false)
       }
-    }
-
-    exchange()
+    })
   }, [router])
 
   const handleUpdate = async () => {
@@ -36,7 +31,10 @@ export default function ResetPassword() {
 
     const { error } = await supabase.auth.updateUser({ password })
 
-    if (!error) {
+    if (error) {
+      alert(error.message)
+    } else {
+      alert("Password updated successfully")
       router.push("/login")
     }
   }
@@ -45,12 +43,18 @@ export default function ResetPassword() {
 
   return (
     <div>
+      <h1>Reset Password</h1>
+
       <input
         type="password"
+        placeholder="New password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleUpdate}>Update Password</button>
+
+      <button onClick={handleUpdate}>
+        Update Password
+      </button>
     </div>
   )
 }

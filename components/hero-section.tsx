@@ -20,8 +20,7 @@ export function HeroSection() {
         </h1>
 
         <p className="mx-auto mb-12 max-w-3xl text-pretty text-lg text-muted-foreground md:text-xl">
-          A high-performance, minimalist portfolio builder designed for developers. No drag-and-drop fluff—just clean
-          code, Markdown support, and dark mode by default.
+          Fill a simple form, choose a template, and get a live developer portfolio instantly — no setup, no design decisions.
         </p>
 
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

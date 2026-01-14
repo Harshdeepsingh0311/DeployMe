@@ -35,7 +35,7 @@ export function SocialProof() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Developer's Choice</h2>
-          <p className="text-lg text-muted-foreground">Built for modern engineers using modern stacks</p>
+          <p className="text-lg text-muted-foreground">Built for developers at every stage — students, interns, and professionals.</p>
         </div>
 
         {/* Tech Stack Logos */}

@@ -3,13 +3,13 @@ import { Code2, Zap, Github, Globe, Minimize2, Lock } from "lucide-react"
 const features = [
   {
     icon: Code2,
-    title: "Markdown Driven",
-    description: "Write your project descriptions in the format you already use. No WYSIWYG editors.",
+    title: "Form-Based Setup",
+    description: "Just fill in your details — projects, experience, links — and we handle the rest.",
   },
   {
     icon: Zap,
     title: "SEO Optimized",
-    description: "Blazing fast load times and clean metadata so recruiters actually find you.",
+    description: "Automatically optimized pages so recruiters and hiring managers can find you easily.",
   },
   {
     icon: Github,
@@ -24,7 +24,7 @@ const features = [
   {
     icon: Minimize2,
     title: "Zero Bloat",
-    description: "No heavy tracking scripts or unnecessary CSS. Just raw performance.",
+    description: "Minimal layouts that highlight your work — not animations or gimmicks.",
   },
   {
     icon: Lock,
@@ -39,7 +39,7 @@ export function FeaturesGrid() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-4xl font-bold md:text-5xl">Built for developers</h2>
-          <p className="text-lg text-muted-foreground">Everything you need to showcase your work, nothing you don't.</p>
+          <p className="text-lg text-muted-foreground">Everything you need to launch a developer portfolio — without spending days building it.</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

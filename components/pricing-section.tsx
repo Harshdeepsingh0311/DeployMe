@@ -5,7 +5,7 @@ const plans = [
   {
     name: "Free",
     price: "$0",
-    description: "Perfect for getting started",
+    description: "Perfect for students and first-time portfolios",
     features: [
       "Subdomain (yourname.deployme.dev)",
       "3 projects",
@@ -13,14 +13,14 @@ const plans = [
       "Dark mode",
       "GitHub integration",
     ],
-    cta: "Start Free",
+    cta: "Create free portfolios",
     popular: false,
   },
   {
     name: "Pro",
     price: "$5",
     period: "/month",
-    description: "For professionals who mean business",
+    description: "For developers who want custom domains, unlimited projects, and branding control",
     features: [
       "Custom domain",
       "Unlimited projects",

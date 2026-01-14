@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="relative z-10 border-t border-border px-6 py-12 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to build your portfolio?</h2>
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to deploy your portfolio?</h2>
           <p className="mb-8 text-lg text-muted-foreground">Join thousands of developers showcasing their work</p>
           <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
             <Link href={"/dashboard"}>Build Your Portfolio Now</Link>

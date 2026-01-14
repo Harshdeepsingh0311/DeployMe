@@ -10,66 +10,99 @@ export default function ResetPassword() {
   const router = useRouter()
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const handleRecovery = async () => {
-      const url = window.location.href
+      try {
+        const url = window.location.href
 
-      // ✅ Only exchange if code is present
-      if (url.includes("code=")) {
-        const { error } =
-          await supabase.auth.exchangeCodeForSession(url)
+        // 🔑 STEP 1: Exchange PKCE code (ONLY if present)
+        if (url.includes("code=")) {
+          const { error } =
+            await supabase.auth.exchangeCodeForSession(url)
 
-        if (error) {
-          console.error("Exchange failed:", error)
-          router.replace("/auth/login")
+          if (error) {
+            console.error("PKCE exchange failed:", error)
+            setError("Reset link is invalid or expired.")
+            return
+          }
+        }
+
+        // 🔑 STEP 2: Verify session exists
+        const { data } = await supabase.auth.getSession()
+
+        if (!data.session) {
+          setError("Reset link is invalid or expired.")
           return
         }
-      }
 
-      // ✅ NOW session should exist
-      const { data } = await supabase.auth.getSession()
-
-      if (!data.session) {
-        router.replace("/auth/login")
-      } else {
         setLoading(false)
+      } catch (err) {
+        console.error(err)
+        setError("Something went wrong.")
       }
     }
 
     handleRecovery()
-  }, [router])
+  }, [])
 
   const handleUpdate = async () => {
+    setError(null)
+
     if (password.length < 8) {
-      alert("Password must be at least 8 characters")
+      setError("Password must be at least 8 characters long.")
       return
     }
 
     const { error } = await supabase.auth.updateUser({ password })
 
     if (error) {
-      alert(error.message)
-    } else {
-      alert("Password updated successfully")
-      router.push("/auth/login")
+      setError(error.message)
+      return
     }
+
+    alert("Password updated successfully.")
+    router.push("/login")
   }
 
-  if (loading) return <p>Verifying reset link…</p>
+  // ⏳ Loading state
+  if (loading && !error) {
+    return <p className="text-center mt-20">Verifying reset link…</p>
+  }
 
+  // ❌ Error state (NO redirect — important)
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto mt-20 text-center">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={() => router.push("/login")}
+          className="btn btn-primary"
+        >
+          Go to Login
+        </button>
+      </div>
+    )
+  }
+
+  // ✅ Success state
   return (
-    <div>
-      <h1>Reset Password</h1>
+    <div className="max-w-md mx-auto mt-20">
+      <h1 className="text-xl font-semibold mb-4">Reset Password</h1>
 
       <input
         type="password"
         placeholder="New password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        className="input w-full mb-3"
       />
 
-      <button onClick={handleUpdate}>
+      <button
+        onClick={handleUpdate}
+        className="btn btn-primary w-full"
+      >
         Update Password
       </button>
     </div>

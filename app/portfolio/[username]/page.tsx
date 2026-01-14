@@ -4,6 +4,8 @@ import PortfolioClient from "@/components/portfolio/portfolio-client"
 import { Metadata } from "next";
 // import { getProfileByUsername } from "@/utils/data";
 
+export const revalidate = 60;
+
 export async function generateMetadata(
   { params }: { params: { username: string } }
 ): Promise<Metadata> {
@@ -73,6 +75,10 @@ export default async function PortfolioPage({
   const { username } = await params
   const supabase = await createSupabaseServerClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   /* ---------------- PROFILE ---------------- */
   const { data: profile } = await supabase
     .from("profiles")
@@ -81,6 +87,8 @@ export default async function PortfolioPage({
     .maybeSingle()
 
   if (!profile) notFound()
+
+  const isOwner = user?.id === profile.id
 
   let resumeUrl: string | null = null;
 
@@ -117,6 +125,7 @@ export default async function PortfolioPage({
   /* ---------------- NORMALIZE & RENDER ---------------- */
   return (
     <PortfolioClient
+      isOwner = {isOwner}
       profile={{
         id: profile.id,
         username: profile.username,

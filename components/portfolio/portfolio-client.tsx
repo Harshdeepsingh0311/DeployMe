@@ -54,8 +54,10 @@ type Profile = {
 
 export default function PortfolioClient({
   profile,
+  isOwner
 }: {
-  profile: Profile
+  profile: Profile,
+  isOwner: boolean
 }) {
   return (
     <div className="relative min-h-screen bg-black text-white">
@@ -69,7 +71,7 @@ export default function PortfolioClient({
       <div className="relative z-10">
         <CursorAnimation />
         <header>
-          <PortfolioNav profile={profile} />
+          <PortfolioNav profile={profile} isOwner={isOwner}/>
         </header>
 
         <main className="max-w-6xl mx-auto px-6 py-20">

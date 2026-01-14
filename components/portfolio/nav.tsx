@@ -3,13 +3,14 @@
 import { Button } from "@/components/ui/button"
 import { Download, Menu, X } from "lucide-react"
 import { useState } from "react"
+import Link from "next/link"
 
 type Profile = {
   name: string
   resume_url?: string | null
 }
 
-export function PortfolioNav({ profile }: { profile: Profile }) {
+export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -37,14 +38,25 @@ export function PortfolioNav({ profile }: { profile: Profile }) {
         </div>
 
         {/* Desktop Resume */}
-        {profile.resume_url && (
-          <a href={profile.resume_url} target="_blank" rel="noopener noreferrer">
-            <Button className="hidden md:flex bg-cyan-500 hover:bg-cyan-600 text-black gap-2 font-semibold">
+        <div className="hidden md:flex">
+          {profile.resume_url && (
+          <Link href={profile.resume_url} target="_blank" rel="noopener noreferrer">
+            <Button className=" bg-cyan-500 hover:bg-cyan-600 text-black m-1 font-semibold">
               <Download className="h-4 w-4" />
               Resume
             </Button>
-          </a>
+          </Link>
         )}
+
+        {isOwner && (
+          <Link href='/dashboard' target="_blank" rel="noopener noreferrer">
+            <Button className=" bg-gray-900 hover:bg-gray-800 text-gray-300 border m-1 border-gray-700 transition-colors font-semibold">
+              Go back to Dashboard
+            </Button>
+          </Link>
+        )}
+        </div>
+        
 
         {/* Mobile Menu Toggle */}
         <button
@@ -80,6 +92,13 @@ export function PortfolioNav({ profile }: { profile: Profile }) {
               </Button>
             </a>
           )}
+          {isOwner && (
+          <Link href='/dashboard' target="_blank" rel="noopener noreferrer">
+            <Button className="w-full bg-gray-900 hover:bg-gray-800 text-gray-300 border mt-2 border-gray-700 transition-colors font-semibold">
+              Go to Dashboard
+            </Button>
+          </Link>
+        )}
         </div>
       )}
     </nav>

@@ -20,12 +20,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid upload data" }, { status: 400 })
   }
 
-  const filePath = `${user.id}/${projectId}`
+  const filePath = `${user.id}/${projectId}-${Date.now()}.png`
 
-  console.log("UPLOAD DEBUG", {
-  fileType: file?.constructor?.name,
-  projectId,
-})
+//   console.log("UPLOAD DEBUG", {
+//   fileType: file?.constructor?.name,
+//   projectId,
+// })
 
   const { error: uploadError } = await supabase.storage
     .from("project-images")

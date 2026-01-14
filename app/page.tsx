@@ -8,6 +8,8 @@ import { TemplatesSection } from "@/components/templates-section"
 import { PricingSection } from "@/components/pricing-section"
 import { Footer } from "@/components/footer"
 
+
+
 export default function PortfolioBuilderPage() {
   return (
     <div className="relative min-h-screen bg-background">

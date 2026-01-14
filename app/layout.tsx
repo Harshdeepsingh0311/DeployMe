@@ -8,12 +8,31 @@ import { Toaster } from "@/components/ui/toaster"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const title = "DeployMe - Your Portfolio, Engineered in Minutes";
+const description = "Build and share your professional portfolio with projects, skills, and experience.";
+
+const url = "https://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "PortfolioEngine - Your Portfolio, Engineered in Minutes",
-  description:
-    "A high-performance, minimalist portfolio builder designed for developers. No drag-and-drop fluff—just clean code, Markdown support, and dark mode by default.",
-  generator: "v0.app",
+  title,
+  description,
+  alternates: { canonical: url },
+  openGraph: { title, description, url, type: "website", images: [
+        {
+          url: "https://localhost:3000/og-default.png",
+          width: 1200,
+          height: 630
+        }
+      ]},
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 }
 
 export default function RootLayout({

@@ -9,7 +9,7 @@ import ExperienceSection from "@/components/dashboard/experience-section"
 import ProjectsSection from "@/components/dashboard/projects-section"
 import { toast } from "@/components/ui/use-toast"
 import Link from "next/link"
-
+import { useRouter } from "next/navigation"
 /* ================= TYPES ================= */
 
 interface Project {
@@ -76,6 +76,7 @@ export default function DashboardClient({
     experience: [],
     projects: [],
   })
+  const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -179,6 +180,8 @@ export default function DashboardClient({
         title: "Portfolio updated",
         description: "Your changes have been saved successfully.",
       })
+
+      router.push(`/portfolio/${portfolioData.personal.username}`)
     } catch (err) {
       console.error(err)
       toast({

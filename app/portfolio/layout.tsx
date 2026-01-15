@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { CursorAnimation } from "@/components/cursor-animation"
 
 export const metadata: Metadata = {
-  title: "Portfolio | PortfolioEngine",
+  title: "Portfolio | DeployMe",
   description: "A premium portfolio showcasing professional work and experience.",
 }
 

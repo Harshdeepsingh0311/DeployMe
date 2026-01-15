@@ -443,7 +443,7 @@ export default function RegisterPage() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         By signing up, you agree to our{" "}
-        <Link href="#" className="text-cyan-400 hover:text-cyan-300 font-medium">
+        <Link href="/terms-and-conditions" className="text-cyan-400 hover:text-cyan-300 font-medium">
           Terms of Service
         </Link>
       </p>

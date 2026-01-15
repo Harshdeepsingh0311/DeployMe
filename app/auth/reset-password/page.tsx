@@ -26,12 +26,12 @@ export default function ResetPassword() {
 
       if (!active) return
 
-      if (error) {
-        console.error(error)
-        setError("Reset link is invalid or expired.")
-        setLoading(false)
-        return
-      }
+      // if (error) {
+      //   console.error(error)
+      //   setError("Reset link is invalid or expired.")
+      //   setLoading(false)
+      //   return
+      // }
 
       // ✅ Session now exists
       const { data } = await supabase.auth.getSession()

@@ -23,7 +23,7 @@ export default function ForgotPassword() {
       redirectTo: `http://deployme-dev.vercel.app/auth/callback`,
     })
 
-    alert("If an account with this email exists, a password reset link has been sent.")
+    setMessage("If an account with this email exists, a password reset link has been sent.")
 
     setLoading(false)
   }

@@ -85,7 +85,7 @@ export default function ResetPassword() {
     }
 
     alert("Password updated successfully.")
-    router.replace("/auth/login")
+    router.replace("/dashboard")
   }
 
   // ⏳ Loading state

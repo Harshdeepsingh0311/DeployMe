@@ -1,5 +1,6 @@
 import { CursorAnimation } from "@/components/cursor-animation"
 import { Footer } from "@/components/footer"
+import { FooterWithoutCTA } from "@/components/footer-without-cta"
 import { Navbar } from "@/components/navbar"
 import type React from "react"
 
@@ -20,6 +21,7 @@ export default function AuthLayout({
         {children}
         <CursorAnimation />
       </div>
+      <FooterWithoutCTA />
     </div>
   )
 }

@@ -3,18 +3,10 @@ import { Github, Linkedin, Twitter } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
-export function Footer() {
+export function FooterWithoutCTA() {
   return (
     <footer className="relative z-10 border-t border-border px-6 py-12 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to deploy your portfolio?</h2>
-          <p className="mb-8 text-lg text-muted-foreground">Join thousands of developers showcasing their work</p>
-          <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600 text-black text-lg px-8">
-            <Link href={"/dashboard"}>Build Your Portfolio Now</Link>
-          </Button>
-        </div>
-
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
           <Link href="/">
             <div className="flex items-center">

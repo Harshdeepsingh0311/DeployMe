@@ -12,19 +12,19 @@ const techStack = [
 const testimonials = [
   {
     quote:
-      "Finally, a portfolio builder that doesn't make me cringe. Clean, fast, and built the way I'd code it myself.",
-    author: "Sarah Chen",
-    role: "Senior Engineer at Stripe",
+      "DeployMe helped me create a clean, professional portfolio in minutes without worrying about design or deployment.",
+    author: "Ishaan Jain",
+    role: "B.Tech ECE 3rd year @DTU",
   },
   {
     quote:
-      "Hiring managers love it. The Markdown structure makes it so easy to scan and the load times are incredible.",
-    author: "Michael Roberts",
-    role: "Engineering Manager",
+      "As an intern, I needed a portfolio fast—DeployMe made it effortless and recruiter-ready.",
+    author: "Saksham",
+    role: "SDE Intern @DFI",
   },
   {
-    quote: "Switched from my custom Jekyll site to this in 10 minutes. Never looked back.",
-    author: "Alex Kumar",
+    quote: "DeployMe streamlines portfolio creation with a polished outcome that reflects real-world professionalism.",
+    author: "Jaspreet Kaur",
     role: "Full-Stack Developer",
   },
 ]

@@ -8,6 +8,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Navbar } from "@/components/navbar"
 import { CursorAnimation } from "@/components/cursor-animation"
+import { FooterWithoutCTA } from "@/components/footer-without-cta"
 
 export default function ComingSoon() {
     return (
@@ -90,6 +91,7 @@ export default function ComingSoon() {
                     </div>
                 </section>
             </div>
+            <FooterWithoutCTA />
         </div>
     )
 }

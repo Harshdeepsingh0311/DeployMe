@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/utils/supabase/server"
 import DashboardClient from "@/components/dashboard/dashboard-client"
 import { Navbar } from "@/components/navbar"
+import { FooterWithoutCTA } from "@/components/footer-without-cta"
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient()
@@ -104,6 +105,7 @@ export default async function DashboardPage() {
         experience={normalizedExperience}
         projects={normalizedProjects}
       />
+      <FooterWithoutCTA />
     </div>
 
   )

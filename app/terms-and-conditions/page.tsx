@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ChevronRight, Menu, X } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { CursorAnimation } from "@/components/cursor-animation"
+import { FooterWithoutCTA } from "@/components/footer-without-cta"
 
 const sections = [
   { id: "about", title: "1. About DeployMe" },
@@ -366,6 +367,7 @@ export default function TermsAndConditionsPage() {
         </main>
       </div>
     </div>
+    <FooterWithoutCTA />
     </div>
   )
 }

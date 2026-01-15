@@ -68,7 +68,8 @@ export default function ResetPassword() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault()
     setError(null)
 
     if (password.length < 8) {

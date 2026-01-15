@@ -15,7 +15,8 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
-  const handleReset = async () => {
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault()
     setLoading(true)
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {

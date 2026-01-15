@@ -337,15 +337,15 @@ export default function TermsAndConditionsPage() {
                 <div className="rounded-lg border border-border bg-card/50 p-6">
                   <p className="text-foreground">
                     <span className="font-semibold">Email:</span>{" "}
-                    <a href="mailto:harshdeepsingh.dtu@gmail.com" className="text-cyan-400 hover:text-cyan-300">
+                    <Link href="mailto:harshdeepsingh.dtu@gmail.com" className="text-cyan-400 hover:text-cyan-300">
                       harshdeepsingh.dtu@gmail.com
-                    </a>
+                    </Link>
                   </p>
                   <p className="mt-2 text-foreground">
                     <span className="font-semibold">Website:</span>{" "}
-                    <a href="https://deployme-dev.vercel.app" className="text-cyan-400 hover:text-cyan-300">
+                    <Link href="https://deployme-dev.vercel.app" className="text-cyan-400 hover:text-cyan-300">
                       deployme-dev.vercel.app
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </section>

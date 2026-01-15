@@ -18,18 +18,15 @@ export function FooterWithoutCTA() {
           </Link>
 
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Docs
-            </a>
-            <a href="#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Features
+            </Link>
+            <Link href="/#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Templates
-            </a>
-            <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </Link>
+            <Link href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pricing
-            </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Blog
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">

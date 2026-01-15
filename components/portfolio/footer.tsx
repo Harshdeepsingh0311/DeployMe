@@ -33,19 +33,19 @@ export function PortfolioFooter({ profile }: { profile: Profile }) {
             <h3 className="text-cyan-400 font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="text-gray-400 hover:text-cyan-400 transition-colors">
+                <Link href="#about" className="text-gray-400 hover:text-cyan-400 transition-colors">
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#projects" className="text-gray-400 hover:text-cyan-400 transition-colors">
+                <Link href="#projects" className="text-gray-400 hover:text-cyan-400 transition-colors">
                   Projects
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#contact" className="text-gray-400 hover:text-cyan-400 transition-colors">
+                <Link href="#contact" className="text-gray-400 hover:text-cyan-400 transition-colors">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -89,7 +89,7 @@ export function PortfolioFooter({ profile }: { profile: Profile }) {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
           <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
-          <p>Powered by @<Link href={'/'}>DeployMe</Link></p>
+          <p>Powered by <span className="text-cyan-400">@<Link href={'/'} >DeployMe</Link></span></p>
         </div>
       </div>
     </footer>

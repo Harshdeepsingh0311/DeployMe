@@ -23,18 +23,18 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#about" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+          <Link href="#about" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             About
-          </a>
-          <a href="#experience" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+          </Link>
+          <Link href="#experience" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             Experience
-          </a>
-          <a href="#projects" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+          </Link>
+          <Link href="#projects" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             Projects
-          </a>
-          <a href="#skills" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+          </Link>
+          <Link href="#skills" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             Skills
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Resume */}
@@ -71,18 +71,18 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden border-t border-cyan-500/10 bg-black/95 p-4 space-y-3">
-          <a href="#about" className="block text-gray-400 hover:text-cyan-400">
+          <Link href="#about" className="block text-gray-400 hover:text-cyan-400">
             About
-          </a>
-          <a href="#experience" className="block text-gray-400 hover:text-cyan-400">
+          </Link>
+          <Link href="#experience" className="block text-gray-400 hover:text-cyan-400">
             Experience
-          </a>
-          <a href="#projects" className="block text-gray-400 hover:text-cyan-400">
+          </Link>
+          <Link href="#projects" className="block text-gray-400 hover:text-cyan-400">
             Projects
-          </a>
-          <a href="#skills" className="block text-gray-400 hover:text-cyan-400">
+          </Link>
+          <Link href="#skills" className="block text-gray-400 hover:text-cyan-400">
             Skills
-          </a>
+          </Link>
 
           {profile.resume_url && (
             <a href={profile.resume_url} target="_blank" rel="noopener noreferrer">

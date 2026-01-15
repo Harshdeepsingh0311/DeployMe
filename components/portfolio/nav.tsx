@@ -49,7 +49,7 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
         )}
 
         {isOwner && (
-          <Link href='/dashboard' target="_blank" rel="noopener noreferrer">
+          <Link href='/dashboard'>
             <Button className=" bg-gray-900 hover:bg-gray-800 text-gray-300 border m-1 border-gray-700 transition-colors font-semibold">
               Go back to Dashboard
             </Button>
@@ -93,7 +93,7 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
             </a>
           )}
           {isOwner && (
-          <Link href='/dashboard' target="_blank" rel="noopener noreferrer">
+          <Link href='/dashboard'>
             <Button className="w-full bg-gray-900 hover:bg-gray-800 text-gray-300 border mt-2 border-gray-700 transition-colors font-semibold">
               Go to Dashboard
             </Button>

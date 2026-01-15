@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { ArrowRight, Lock, Eye, EyeOff } from "lucide-react"
+import { PASSWORD_MIN_LENGTH } from "@/utils/constants"
 
 export default function ResetPassword() {
   const router = useRouter()
@@ -72,8 +73,8 @@ export default function ResetPassword() {
     e.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.")
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      setError(`Password must be at least ${PASSWORD_MIN_LENGTH} characters long.`)
       return
     }
 
@@ -147,6 +148,7 @@ export default function ResetPassword() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50 pr-10"
+                minLength={PASSWORD_MIN_LENGTH}
               />
               <button
                 type="button"

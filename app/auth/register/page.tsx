@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { ArrowRight, User, Mail, Lock, MapPin, FileText, Github, Linkedin } from "lucide-react"
+import { PASSWORD_MIN_LENGTH } from "@/utils/constants"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -32,6 +33,10 @@ export default function RegisterPage() {
   })
 
   const [Loading, setLoading] = useState(false)
+  const isPasswordValid = formData.password.length >= PASSWORD_MIN_LENGTH
+
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
@@ -59,90 +64,118 @@ export default function RegisterPage() {
   }
 
   const handleRegister = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setLoading(true)
-  setError(null)
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
-  const username = formData.username.toLowerCase().trim()
+    const username = formData.username.toLowerCase().trim()
 
-  // 1️⃣ Resume validation
-  if (formData.resume) {
-    if (formData.resume.type !== "application/pdf") {
-      setError("Only PDF resumes are allowed")
+    // 🚫 Basic username validation (extra safety)
+    const usernameRegex = /^[a-z0-9]+$/
+    if (!usernameRegex.test(username)) {
+      setError("Username can only contain lowercase letters and numbers")
       setLoading(false)
       return
     }
 
-    if (formData.resume.size > 10 * 1024 * 1024) {
-      setError("Resume must be under 10MB")
+    // 0️⃣ CHECK USERNAME AVAILABILITY (🔥 IMPORTANT)
+    const { data: existingProfile, error: usernameCheckError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("username", username)
+      .maybeSingle()
+
+    if (usernameCheckError) {
+      setError("Failed to verify username availability")
       setLoading(false)
       return
     }
-  }
 
-  // 2️⃣ Signup
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      data: {
-        username,
-        full_name: formData.fullName,
-      },
-    },
-  })
-
-  if (error || !data.user) {
-    setError(error?.message || "Signup failed")
-    setLoading(false)
-    return
-  }
-
-  let resumeUrl: string | null = null
-
-  // 3️⃣ Upload resume
-  if (formData.resume) {
-    resumeUrl = `${data.user.id}/resume.pdf`
-
-    const { error: uploadError } = await supabase.storage
-      .from("resume")
-      .upload(resumeUrl, formData.resume, {
-        upsert: true,
-        contentType: "application/pdf",
-      })
-
-    if (uploadError) {
-      setError(uploadError.message)
+    if (existingProfile) {
+      setError("Username is already taken")
       setLoading(false)
       return
     }
-  }
 
-  // 4️⃣ Create profile
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .insert({
-      id: data.user.id,
+    // 1️⃣ Resume validation
+    if (formData.resume) {
+      if (formData.resume.type !== "application/pdf") {
+        setError("Only PDF resumes are allowed")
+        setLoading(false)
+        return
+      }
+
+      if (formData.resume.size > 10 * 1024 * 1024) {
+        setError("Resume must be under 10MB")
+        setLoading(false)
+        return
+      }
+    }
+
+    // 2️⃣ Signup (ONLY AFTER username is confirmed free)
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
-      username,
-      full_name: formData.fullName,
-      bio: formData.bio,
-      location: formData.location,
-      social_links: formData.socialLinks,
-      resume_url: resumeUrl, // ✅ renamed here
+      password: formData.password,
+      options: {
+        data: {
+          username,
+          full_name: formData.fullName,
+        },
+      },
     })
 
-  if (profileError) {
-    setError(profileError.message)
+    if (error || !data.user) {
+      setError(error?.message || "Signup failed")
+      setLoading(false)
+      return
+    }
+
+    let resumeUrl: string | null = null
+
+    // 3️⃣ Upload resume
+    if (formData.resume) {
+      resumeUrl = `${data.user.id}/resume.pdf`
+
+      const { error: uploadError } = await supabase.storage
+        .from("resume")
+        .upload(resumeUrl, formData.resume, {
+          upsert: true,
+          contentType: "application/pdf",
+        })
+
+      if (uploadError) {
+        setError(uploadError.message)
+        setLoading(false)
+        return
+      }
+    }
+
+    // 4️⃣ Create profile
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: data.user.id,
+        email: formData.email,
+        username,
+        full_name: formData.fullName,
+        bio: formData.bio,
+        location: formData.location,
+        social_links: formData.socialLinks,
+        resume_url: resumeUrl,
+      })
+
+    if (profileError) {
+      setError("Profile creation failed. Please try again.")
+      setLoading(false)
+      return
+    }
+
+    // 5️⃣ Redirect
     setLoading(false)
-    return
+    router.push("/dashboard")
+    router.refresh()
   }
 
-  // 5️⃣ Redirect
-  setLoading(false)
-  router.push("/dashboard")
-  router.refresh()
-}
 
 
 
@@ -169,7 +202,7 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <Label htmlFor="username" className="flex items-center gap-2">
                   <User className="h-4 w-4 text-cyan-400" />
-                  Username
+                  Username *
                 </Label>
                 <Input
                   id="username"
@@ -185,7 +218,7 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <Label htmlFor="fullName" className="flex items-center gap-2">
                   <User className="h-4 w-4 text-cyan-400" />
-                  Full Name
+                  Full Name *
                 </Label>
                 <Input
                   id="fullName"
@@ -207,7 +240,7 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-cyan-400" />
-                  Email
+                  Email *
                 </Label>
                 <Input
                   id="email"
@@ -242,7 +275,7 @@ export default function RegisterPage() {
           <div className="space-y-2">
             <Label htmlFor="bio" className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-cyan-400" />
-              Bio
+              Bio *
             </Label>
             <textarea
               id="bio"
@@ -352,7 +385,7 @@ export default function RegisterPage() {
           <div className="space-y-2">
             <Label htmlFor="password" className="flex items-center gap-2">
               <Lock className="h-4 w-4 text-cyan-400" />
-              Password
+              Password *
             </Label>
             <Input
               id="password"
@@ -363,17 +396,23 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50"
+              minLength={PASSWORD_MIN_LENGTH}
             />
             <p className="text-xs text-muted-foreground">
               At least 8 characters with uppercase, lowercase, and numbers
             </p>
           </div>
 
-          {error && <p>{error}</p>}
+          {error && (
+            <div className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+              {error}
+            </div>
+          )}
+
           {/* Submit Button */}
           <Button
             type="submit"
-            disabled={Loading}
+            disabled={Loading || !isPasswordValid}
             className="w-full group bg-cyan-500 hover:bg-cyan-600 text-black text-base py-6"
           >
             {Loading ? "Creating Account..." : "Create Portfolio Account"}
@@ -389,7 +428,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          
+
 
           <Button
             type="button"

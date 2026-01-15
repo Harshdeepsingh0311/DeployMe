@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { ArrowRight, Lock, Mail } from "lucide-react"
-import { CursorAnimation } from "@/components/cursor-animation"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -81,7 +80,11 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && <p className="text-red">{error}</p>}
+          {error && (
+            <div className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+              {error}
+            </div>
+          )}
           <Button
             type="submit"
             disabled={Loading}

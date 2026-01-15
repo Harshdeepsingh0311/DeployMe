@@ -40,7 +40,7 @@ export function FooterWithoutCTA() {
         </div>
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          © 2025 DeployMe. Built with ❤️ by <Link href={"https://www.linkedin.com/in/harshdeepsingh0311/"}>Harshdeep Singh</Link>
+          © {new Date().getFullYear()} DeployMe. Built with ❤️ by <Link href={"https://www.linkedin.com/in/harshdeepsingh0311/"}>Harshdeep Singh</Link>
         </div>
       </div>
     </footer>

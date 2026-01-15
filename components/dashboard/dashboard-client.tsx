@@ -10,6 +10,8 @@ import ProjectsSection from "@/components/dashboard/projects-section"
 import { toast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { CopyUrlButton } from "../copy-url-button"
+import { Input } from "../ui/input"
 /* ================= TYPES ================= */
 
 interface Project {
@@ -56,6 +58,7 @@ export default function DashboardClient({
   experience,
   projects,
 }: Props) {
+  const portfolioUrl = `https://deployme-dev.vercel.app/portfolio/${profile.username}`
   const [portfolioData, setPortfolioData] = useState<PortfolioData>({
     personal: {
       username: "",
@@ -214,6 +217,15 @@ export default function DashboardClient({
               View Portfolio
             </Button>
           </Link>
+          <div className="flex items-center gap-2 mt-5">
+            <Input
+              value={portfolioUrl}
+              readOnly
+              className="flex-1 px-3 py-2 border rounded-md text-sm bg-muted"
+            />
+            <CopyUrlButton url={portfolioUrl} />
+          </div>
+
 
         </div>
 

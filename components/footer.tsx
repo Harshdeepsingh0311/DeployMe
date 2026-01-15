@@ -26,6 +26,9 @@ export function Footer() {
           </Link>
 
           <div className="flex items-center gap-6">
+            <Link href="https://github.com/Harshdeepsingh0311/DeployMe/blob/main/README.md" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Docs
+            </Link>
             <Link href="/#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Features
             </Link>

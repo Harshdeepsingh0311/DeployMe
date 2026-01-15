@@ -16,12 +16,14 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
-          <div className="flex items-center">
-            <Image src="/logo.png" alt="PortfolioEngine" width={48} height={48} unoptimized />
-            <span className="text-xl font-bold ">
-              <Link href="/">eployMe</Link>
-            </span>
-          </div>
+          <Link href="/">
+            <div className="flex items-center">
+              <Image src="/logo.png" alt="PortfolioEngine" width={48} height={48} unoptimized />
+              <span className="text-xl font-bold ml-0">
+                eployMe
+              </span>
+            </div>
+          </Link>
 
           <div className="flex items-center gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -49,7 +51,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          © 2025 DeployMe. Built for developers, by developers.
+          © 2025 DeployMe. Built with ❤️ by Harshdeep Singh
         </div>
       </div>
     </footer>

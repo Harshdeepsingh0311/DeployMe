@@ -1,13 +1,17 @@
 "use client"
 
 import { CursorAnimation } from "@/components/cursor-animation"
+import { Footer } from "@/components/footer"
+import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Home } from "lucide-react"
 import Link from "next/link"
 
 export default function NotFound() {
   return (
-    <div className="relative min-h-screen bg-background flex items-center justify-center px-4 overflow-hidden">
+    <div>
+      <Navbar />
+      <div className="relative min-h-screen bg-background flex items-center justify-center px-4 overflow-hidden">
         <CursorAnimation />
       {/* Gradient blur backgrounds */}
       <div className="absolute inset-0 -z-10">
@@ -88,6 +92,7 @@ export default function NotFound() {
           </div>
         </div>
       </section>
+    </div>
     </div>
   )
 }

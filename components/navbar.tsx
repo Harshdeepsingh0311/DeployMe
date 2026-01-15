@@ -31,12 +31,14 @@ export function Navbar() {
 
   return (
     <nav className="relative z-10 flex items-center justify-between border-b border-border px-6 py-4 backdrop-blur-sm lg:px-12">
-      <div className="flex items-center">
-        <Image src="/logo.png" alt="PortfolioEngine" width={48} height={48} unoptimized/>
-        <span className="text-xl font-bold ">
-          <Link href="/">eployMe</Link>
-        </span>
-      </div>
+      <Link href="/">
+            <div className="flex items-center">
+              <Image src="/logo.png" alt="PortfolioEngine" width={48} height={48} unoptimized />
+              <span className="text-xl font-bold ml-0">
+                eployMe
+              </span>
+            </div>
+          </Link>
 
       <div className="hidden items-center gap-8 md:flex">
         <Link href="/#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

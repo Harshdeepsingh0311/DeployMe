@@ -18,9 +18,9 @@ export default function PortfolioBuilderPage() {
         <CursorAnimation />
         <HeroSection />
         <FeaturesGrid />
-        <SocialProof />
         <TemplatesSection />
-        <PricingSection />
+        <SocialProof />
+        {/* <PricingSection /> */}
       </main>
       <Footer />
     </div>

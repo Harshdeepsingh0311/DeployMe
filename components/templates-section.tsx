@@ -3,22 +3,26 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import Link from "next/link"
 
 const templates = [
   {
     name: "The Modern Paper",
     description: "Clean, Swiss-inspired grid layout",
     preview: "/comingSoon.png",
+    link: "/coming-soon"
   },
   {
     name: "Dark Theme",
     description: "Monochrome, Professional and Recruiter's favourite",
     preview: "/darkPortfolio.png",
+    link: "/portfolio/demo"
   },
   {
     name: "The Glass",
     description: "Glassmorphic UI with depth",
     preview: "/comingSoon.png",
+    link: "/coming-soon"
   },
 ]
 
@@ -36,19 +40,21 @@ export function TemplatesSection() {
         <div className="grid gap-8 md:grid-cols-3">
           {templates.map((template, index) => (
             <div key={index} className="group overflow-hidden rounded-lg border border-border bg-card">
-              <div className="aspect-video overflow-hidden bg-muted">
-                <Image
-                  src={template.preview || "/placeholder.svg"}
-                  alt={`${template.name} Template Screenshot`}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  width={1200}
-                  height={750}
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="mb-2 text-xl font-semibold">{template.name}</h3>
-                <p className="text-sm text-muted-foreground">{template.description}</p>
-              </div>
+              <Link href={template.link} target="_blank" rel="noopener noreferrer">
+                <div className="aspect-video overflow-hidden bg-muted">
+                  <Image
+                    src={template.preview || "/placeholder.svg"}
+                    alt={`${template.name} Template Screenshot`}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    width={1200}
+                    height={750}
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="mb-2 text-xl font-semibold">{template.name}</h3>
+                  <p className="text-sm text-muted-foreground">{template.description}</p>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

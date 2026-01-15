@@ -22,7 +22,7 @@ export default function ForgotPassword() {
       redirectTo: `http://deployme-dev.vercel.app/auth/callback`,
     })
 
-    setMessage("If an account with this email exists, a password reset link has been sent.")
+    alert("If an account with this email exists, a password reset link has been sent.")
 
     setLoading(false)
   }
@@ -54,6 +54,7 @@ export default function ForgotPassword() {
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold mb-2">Forgot Password?</h1>
         <p className="text-muted-foreground">No worries, we'll send you reset instructions to your email</p>
+        {message && <p className="text-sm mt-3 text-cyan-400">{message}</p>}
       </div>
 
       <Card className="px-0 border-cyan-500/20 bg-card/50 backdrop-blur-sm">

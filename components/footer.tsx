@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Github, Twitter } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export function Footer() {
   return (
@@ -15,9 +16,11 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-md bg-cyan-500" />
-            <span className="text-xl font-bold"><Link href={"/"}>DeployMe</Link></span>
+          <div className="flex items-center">
+            <Image src="/logo.png" alt="PortfolioEngine" width={48} height={48} unoptimized />
+            <span className="text-xl font-bold ">
+              <Link href="/">eployMe</Link>
+            </span>
           </div>
 
           <div className="flex items-center gap-6">

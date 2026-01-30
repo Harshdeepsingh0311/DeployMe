@@ -47,7 +47,7 @@ export function Navbar() {
         <Link href="/#templates" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Templates
         </Link>
-        <Link href="/#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <Link href="/coming-soon" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Pricing
         </Link>
         {session ? (

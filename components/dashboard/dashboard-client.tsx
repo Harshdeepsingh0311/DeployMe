@@ -16,6 +16,7 @@ import { Input } from "../ui/input"
 
 interface Project {
   id?: string
+  client_id: string   // ✅ REQUIRED
   title: string
   description: string
   image: File | null
@@ -153,13 +154,13 @@ export default function DashboardClient({
     try {
       const updatedData: PortfolioData = structuredClone(portfolioData)
 
-      /* ---------- RESUME ---------- */
+      // Resume upload
       if (portfolioData.personal.resume) {
         await uploadResume(portfolioData.personal.resume)
         updatedData.personal.resume = null
       }
 
-      /* ---------- DB UPDATE ---------- */
+      // Save DB first
       const res = await fetch("/api/portfolio/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,16 +169,32 @@ export default function DashboardClient({
 
       if (!res.ok) throw new Error("Update failed")
 
-      /* ---------- PROJECT IMAGES (ISSUE #3 FIX) ---------- */
-      for (const project of portfolioData.projects) {
-        if (
-          project.image &&
-          typeof project.id === "string" &&
-          project.id.length > 0
-        ) {
-          await uploadProjectImage(project.id, project.image)
+      const { projects: savedProjects } = await res.json()
+
+      // ✅ CORRECT image upload mapping
+      for (const saved of savedProjects) {
+        const localProject = portfolioData.projects.find(
+          (p) =>
+            // new project match
+            (saved.client_id && p.client_id === saved.client_id) ||
+            // existing project match
+            (p.id && p.id === saved.id)
+        )
+
+        if (localProject?.image && saved.id) {
+          await uploadProjectImage(saved.id, localProject.image)
         }
       }
+
+      // 🧹 OPTIONAL: clear image files after successful upload
+      setPortfolioData((p) => ({
+        ...p,
+        projects: p.projects.map((proj) => ({
+          ...proj,
+          image: null,
+        })),
+      }))
+
 
       toast({
         title: "Portfolio updated",
@@ -196,6 +213,7 @@ export default function DashboardClient({
       setIsLoading(false)
     }
   }
+
 
   /* ================= UI ================= */
 

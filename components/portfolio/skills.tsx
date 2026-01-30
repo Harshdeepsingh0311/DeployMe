@@ -6,6 +6,7 @@ type Skill = {
 }
 
 export function PortfolioSkills({ skills }: { skills: Skill[] }) {
+  if (!skills || skills.length===0) return null
   return (
     <section id="skills" className="py-32 space-y-12 border-b border-gray-800">
       <h2 className="text-4xl font-bold">Skills</h2>

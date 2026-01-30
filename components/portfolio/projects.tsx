@@ -18,6 +18,7 @@ export function PortfolioProjects({
 }: {
   projects: Project[]
 }) {
+  if (!projects || projects.length===0) return null
   return (
     <section id="projects" className="py-32 space-y-12 border-b border-gray-800">
       <h2 className="text-4xl font-bold">Featured Projects</h2>

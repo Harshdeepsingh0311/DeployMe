@@ -14,6 +14,7 @@ export function PortfolioExperience({
 }: {
   experiences: Experience[]
 }) {
+  if (!experiences || experiences.length===0) return null
   return (
     <section id="experience" className="py-32 space-y-12 border-b border-gray-800">
       <h2 className="text-4xl font-bold">Experience</h2>

@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Plus, Trash2 } from "lucide-react"
 
 interface Project {
-  id?: string            // ✅ optional (DB id only)
+  id?: string
+  client_id: string   // ✅ REQUIRED
   title: string
   description: string
   image: File | null
@@ -34,13 +35,15 @@ export default function ProjectsSection({
     onChange([
       ...projects,
       {
+        client_id: crypto.randomUUID(),
         title: "",
         description: "",
         image: null,
         tech_stack: [],
-        git_link: "",
-        live_link: ""
-      },
+        git_link: null,
+        live_link: null,
+      }
+      ,
     ])
   }
 

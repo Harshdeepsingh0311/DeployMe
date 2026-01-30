@@ -5,6 +5,17 @@ export async function GET() {
     return NextResponse.json({ message: "API works" })
 }
 
+function getStoragePath(publicUrl: string) {
+    try {
+        const url = new URL(publicUrl)
+        const parts = url.pathname.split("/project-images/")
+        return parts.length === 2 ? parts[1] : null
+    } catch {
+        return null
+    }
+}
+
+
 export async function POST(req: Request) {
     try {
         const supabase = await createSupabaseServerClient()
@@ -154,19 +165,47 @@ export async function POST(req: Request) {
 
         const { data: dbProjects } = await supabase
             .from("projects")
-            .select("id")
+            .select("id, image_url")
             .eq("profile_id", profileId)
 
         const incomingProjIds = projects.filter((p: any) => p.id).map((p: any) => p.id)
         const dbProjIds = dbProjects?.map((p) => p.id) ?? []
 
-        const projToDelete = dbProjIds.filter(
-            (id) => !incomingProjIds.includes(id)
-        )
+
+        const projToDelete =
+            dbProjects?.filter((p) => !incomingProjIds.includes(p.id)) ?? []
+
+        for (const project of projToDelete) {
+            if (!project.image_url) continue
+
+            const bucketPath = getStoragePath(project.image_url)
+            console.log(bucketPath)
+            if (!bucketPath) {
+                console.error("❌ Invalid image URL:", project.image_url)
+                continue
+            }
+
+            const { error } = await supabase.storage
+                .from("project-images")
+                .remove([bucketPath])
+
+            if (error) {
+                // DO NOT block project deletion
+                console.error("❌ IMAGE DELETE FAILED:", error)
+            }
+        }
+
 
         if (projToDelete.length > 0) {
-            await supabase.from("projects").delete().in("id", projToDelete)
+            await supabase
+                .from("projects")
+                .delete()
+                .in(
+                    "id",
+                    projToDelete.map((p) => p.id)
+                )
         }
+
 
         const projToUpdate = projects.filter((p: any) => p.id)
         const projToInsert = projects.filter((p: any) => !p.id)
@@ -177,6 +216,7 @@ export async function POST(req: Request) {
                 .insert(
                     projToInsert.map((p: any) => ({
                         profile_id: profileId,
+                        client_id: p.client_id, // ✅ REQUIRED
                         title: p.title,
                         description: p.description,
                         tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack : [],
@@ -190,6 +230,7 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: error.message }, { status: 500 })
             }
         }
+
 
 
         for (const p of projToUpdate) {
@@ -211,7 +252,25 @@ export async function POST(req: Request) {
         }
 
 
-        return NextResponse.json({ success: true, redirectTo: `/portfolio/${personal.username}`, })
+        const { data: finalProjects, error } = await supabase
+            .from("projects")
+            .select("id, client_id")
+            .eq("profile_id", profileId)
+
+        if (error) {
+            console.error("❌ PROJECT FETCH ERROR:", error)
+            return NextResponse.json({ error: error.message }, { status: 500 })
+        }
+
+
+
+
+        return NextResponse.json({
+            success: true,
+            projects: finalProjects,
+            redirectTo: `/portfolio/${personal.username}`,
+        })
+
     } catch (err) {
         console.error("Portfolio update failed:", err)
         return NextResponse.json(

@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server"
 import { createSupabaseServerClient } from "@/utils/supabase/server"
 
+function getStoragePath(publicUrl: string) {
+  try {
+    const url = new URL(publicUrl)
+    const parts = url.pathname.split("/project-images/")
+    return parts.length === 2 ? parts[1] : null
+  } catch {
+    return null
+  }
+}
+
+
 export async function POST(req: Request) {
   const supabase = await createSupabaseServerClient()
 
@@ -16,16 +27,25 @@ export async function POST(req: Request) {
   const file = formData.get("file")
   const projectId = formData.get("projectId")
 
+  const { data: existingProject } = await supabase
+    .from("projects")
+    .select("image_url")
+    .eq("id", projectId)
+    .single()
+
+  const oldImageUrl = existingProject?.image_url
+
+
   if (!(file instanceof File) || typeof projectId !== "string") {
     return NextResponse.json({ error: "Invalid upload data" }, { status: 400 })
   }
 
   const filePath = `${user.id}/${projectId}-${Date.now()}.png`
 
-//   console.log("UPLOAD DEBUG", {
-//   fileType: file?.constructor?.name,
-//   projectId,
-// })
+  //   console.log("UPLOAD DEBUG", {
+  //   fileType: file?.constructor?.name,
+  //   projectId,
+  // })
 
   const { error: uploadError } = await supabase.storage
     .from("project-images")
@@ -47,6 +67,22 @@ export async function POST(req: Request) {
     .from("projects")
     .update({ image_url: publicUrl })
     .eq("id", projectId)
+
+  if (oldImageUrl) {
+    const oldPath = getStoragePath(oldImageUrl)
+
+    if (oldPath) {
+      const { error: deleteError } = await supabase.storage
+        .from("project-images")
+        .remove([oldPath])
+
+      if (deleteError) {
+        console.error("❌ OLD IMAGE DELETE FAILED:", deleteError)
+        // DO NOT fail the request
+      }
+    }
+  }
+
 
   return NextResponse.json({ url: publicUrl })
 }

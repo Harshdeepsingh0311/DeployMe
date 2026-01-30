@@ -17,8 +17,10 @@ export function PortfolioExperience({
   if (!experiences || experiences.length===0) return null
   return (
     <section id="experience" className="py-32 space-y-12 border-b border-gray-800">
-      <h2 className="text-4xl font-bold">Experience</h2>
-
+      <div className="mb-12">
+      <h2 className="text-4xl font-bold mb-2">Experience</h2>
+      <p className="text-cyan-400/70">Roles, responsibilities, and real-world impact</p>
+      </div>
       <div className="space-y-8">
         {experiences.map((exp, idx) => (
           <div key={exp.id} className="relative pl-8 pb-8 group">

@@ -6,14 +6,16 @@ export async function GET() {
 }
 
 function getStoragePath(publicUrl: string) {
-    try {
-        const url = new URL(publicUrl)
-        const parts = url.pathname.split("/project-images/")
-        return parts.length === 2 ? parts[1] : null
-    } catch {
-        return null
-    }
+  try {
+    const url = new URL(publicUrl)
+    const index = url.pathname.indexOf("/project-images/")
+    if (index === -1) return null
+    return url.pathname.slice(index + "/project-images/".length)
+  } catch {
+    return null
+  }
 }
+
 
 
 export async function POST(req: Request) {
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
 
         const profileId = profile.id
 
-        const { personal, skills, experience, projects } = await req.json()
+        const { personal, skills, experience, projects, achievements } = await req.json()
 
         /* ---------------- PROFILE ---------------- */
         await supabase
@@ -157,6 +159,75 @@ export async function POST(req: Request) {
                 }))
             )
         }
+
+
+         /* ============================================================
+           ======================= achievements ===========================
+           ============================================================ */
+
+        const { data: dbAch } = await supabase
+            .from("achievements") // ✅ FIXED TABLE NAME
+            .select("id")
+            .eq("profile_id", profileId)
+
+        const incomingAchIds = achievements
+            .filter((e: any) => e.id)
+            .map((e: any) => e.id)
+
+        const dbAchIds = dbAch?.map((e) => e.id) ?? []
+
+        /* ---------- DELETE REMOVED ---------- */
+        const achToDelete = dbAchIds.filter(
+            (id) => !incomingAchIds.includes(id)
+        )
+
+        if (achToDelete.length > 0) {
+            await supabase
+                .from("achievements")
+                .delete()
+                .in("id", achToDelete)
+        }
+
+        /* ---------- UPDATE EXISTING ---------- */
+        const achToUpdate = achievements.filter((e: any) => e.id)
+
+        for (const e of achToUpdate) {
+            const { error } = await supabase
+                .from("achievements")
+                .update({
+                    title: e.title,
+                    category: e.category,
+                    issuer: e.issuer,
+                    date: e.date ? `${e.date}-01` : null,
+                    description: e.description,
+                })
+                .eq("id", e.id)
+
+            if (error) {
+                console.error("❌ ACHIEVEMENT UPDATE ERROR:", error)
+                return NextResponse.json(
+                    { error: error.message },
+                    { status: 500 }
+                )
+            }
+        }
+
+        /* ---------- INSERT NEW ---------- */
+        const achToInsert = achievements.filter((e: any) => !e.id)
+
+        if (achToInsert.length > 0) {
+            await supabase.from("achievements").insert(
+                achToInsert.map((e: any) => ({
+                    profile_id: profileId,
+                    title: e.title,
+                    category: e.category,
+                    issuer: e.issuer,
+                    date: e.date ? `${e.date}-01` : null,
+                    description: e.description,
+                }))
+            )
+        }
+
 
 
         /* ============================================================

@@ -21,7 +21,10 @@ export function PortfolioProjects({
   if (!projects || projects.length===0) return null
   return (
     <section id="projects" className="py-32 space-y-12 border-b border-gray-800">
-      <h2 className="text-4xl font-bold">Featured Projects</h2>
+      <div className="mb-12">
+      <h2 className="text-4xl font-bold mb-2">Featured Projects</h2>
+      <p className="text-cyan-400/70">From ideas to real-world solutions</p>
+      </div>
 
       <div className="space-y-16">
         {projects.map((project, idx) => {

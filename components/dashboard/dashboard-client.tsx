@@ -12,6 +12,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { CopyUrlButton } from "../copy-url-button"
 import { Input } from "../ui/input"
+import AchievementsSection from "./achievements-section"
 /* ================= TYPES ================= */
 
 interface Project {
@@ -44,6 +45,7 @@ interface PortfolioData {
   skills: { id?: string; name: string }[]
   experience: any[]
   projects: Project[]
+  achievements: any[]
 }
 
 type Props = {
@@ -51,6 +53,7 @@ type Props = {
   skills: { id: string; name: string }[]
   experience: any[]
   projects: Project[]
+  achievements: any[]
 }
 
 export default function DashboardClient({
@@ -58,6 +61,7 @@ export default function DashboardClient({
   skills,
   experience,
   projects,
+  achievements
 }: Props) {
   const portfolioUrl = `https://deployme-dev.vercel.app/portfolio/${profile.username}`
   const [portfolioData, setPortfolioData] = useState<PortfolioData>({
@@ -79,6 +83,7 @@ export default function DashboardClient({
     skills: [],
     experience: [],
     projects: [],
+    achievements: [],
   })
   const router = useRouter()
 
@@ -106,8 +111,9 @@ export default function DashboardClient({
       skills,
       experience,
       projects,
+      achievements
     })
-  }, [profile, skills, experience, projects])
+  }, [profile, skills, experience, projects, achievements])
 
   /* ================= UPLOAD HELPERS ================= */
 
@@ -276,6 +282,10 @@ export default function DashboardClient({
               setPortfolioData((p) => ({ ...p, projects }))
             }
           />
+
+          <AchievementsSection
+            achievements={portfolioData.achievements}
+            onChange={(achievements)=>setPortfolioData((p)=>({...p, achievements}))} />
 
           <div className="flex justify-end pt-4">
             <Button

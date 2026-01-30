@@ -4,12 +4,14 @@ import { createSupabaseServerClient } from "@/utils/supabase/server"
 function getStoragePath(publicUrl: string) {
   try {
     const url = new URL(publicUrl)
-    const parts = url.pathname.split("/project-images/")
-    return parts.length === 2 ? parts[1] : null
+    const index = url.pathname.indexOf("/project-images/")
+    if (index === -1) return null
+    return url.pathname.slice(index + "/project-images/".length)
   } catch {
     return null
   }
 }
+
 
 
 export async function POST(req: Request) {

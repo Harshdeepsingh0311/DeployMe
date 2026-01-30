@@ -116,6 +116,29 @@ export default async function PortfolioPage({
     .select("id, title, description, image_url, git_link, live_link, tech_stack")
     .eq("profile_id", profile.id)
 
+  /* ---------------- PROJECTS ---------------- */
+  const { data: achievements } = await supabase
+    .from("achievements")
+    .select("id, title, category, issuer, date, description")
+    .eq("profile_id", profile.id)
+    .order("date", { ascending: false })
+
+  const normalizedAchievements =
+  achievements?.map((a) => ({
+    id: a.id,
+    title: a.title,
+    category: a.category,
+    issuer: a.issuer,
+    date: a.date
+      ? new Date(a.date).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })
+      : null,
+    description: a.description,
+  })) ?? []
+
+
   /* ---------------- SKILLS ---------------- */
   const { data: skills } = await supabase
     .from("skills")
@@ -146,6 +169,7 @@ export default async function PortfolioPage({
         experiences: experiences ?? [],
         projects: projects ?? [],
         skills: skills ?? [],
+        achievements: normalizedAchievements,
       }}
     />
   )

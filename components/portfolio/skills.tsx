@@ -6,10 +6,14 @@ type Skill = {
 }
 
 export function PortfolioSkills({ skills }: { skills: Skill[] }) {
-  if (!skills || skills.length===0) return null
+  if (!skills || skills.length === 0) return null
   return (
     <section id="skills" className="py-32 space-y-12 border-b border-gray-800">
-      <h2 className="text-4xl font-bold">Skills</h2>
+
+      <div className="mb-12">
+        <h2 className="text-4xl font-bold">Skills</h2>
+        <p className="text-cyan-400/70">My technical toolbox</p>
+      </div>
 
       <div className="flex flex-wrap gap-3">
         {skills.map((skill) => (

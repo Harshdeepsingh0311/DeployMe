@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/utils/supabase/server"
 import DashboardClient from "@/components/dashboard/dashboard-client"
 import { Navbar } from "@/components/navbar"
 import { FooterWithoutCTA } from "@/components/footer-without-cta"
+import { cookies } from "next/headers"
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient()
@@ -73,6 +74,21 @@ export default async function DashboardPage() {
     live_link
   `).eq("profile_id", profile.id)
 
+  /* ---------- ACHIEVEMENTS ---------- */
+  const { data: achievements } = await supabase
+    .from("achievements")
+    .select(`
+    id,
+    title,
+    category,
+    issuer,
+    date,
+    description
+  `)
+    .eq("profile_id", profile.id)
+    .order("date", { ascending: false })
+
+
   const normalizedProjects =
     projects?.map((p) => ({
       id: p.id,
@@ -85,6 +101,16 @@ export default async function DashboardPage() {
       live_link: p.live_link ?? null,
     })) ?? []
 
+  const normalizedAchievements =
+    achievements?.map((a) => ({
+      id: a.id,
+      client_id: a.id, // 👈 important for frontend matching
+      title: a.title,
+      category: a.category,
+      issuer: a.issuer,
+      date: a.date?.slice(0, 7) ?? "",
+      description: a.description,
+    })) ?? []
 
 
 
@@ -106,6 +132,7 @@ export default async function DashboardPage() {
         skills={skills ?? []}
         experience={normalizedExperience}
         projects={normalizedProjects}
+        achievements={normalizedAchievements}
       />
       <FooterWithoutCTA />
     </div>

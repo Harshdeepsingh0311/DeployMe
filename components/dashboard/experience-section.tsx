@@ -13,6 +13,7 @@ interface Experience {
   startDate: string
   endDate: string
   description: string
+  isCurrent: boolean
 }
 
 interface ExperienceSectionProps {
@@ -35,6 +36,7 @@ export default function ExperienceSection({
         startDate: "",
         endDate: "",
         description: "",
+        isCurrent: false
       },
     ])
   }
@@ -125,13 +127,41 @@ export default function ExperienceSection({
                   <Input
                     type="month"
                     value={experience.endDate}
+                    disabled={experience.isCurrent}
                     onChange={(e) =>
                       updateExperience(index, "endDate", e.target.value)
                     }
-                    className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50 [&::-webkit-calendar-picker-indicator]:opacity-60
+                    className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:opacity-60
     [&::-webkit-calendar-picker-indicator]:invert"
                   />
                 </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20 hover:border-cyan-500/50 hover:bg-cyan-500/8 transition-all duration-100">
+                <input
+                  type="checkbox"
+                  id={`isCurrently-${experience.id}`}
+                  checked={experience.isCurrent || false}
+                  onChange={(e) => {
+                    const checked = e.currentTarget.checked
+
+                    onChange(
+                      experiences.map((exp, i) =>
+                        i === index
+                          ? {
+                            ...exp,
+                            isCurrent: checked,
+                            endDate: checked ? "" : exp.endDate, // ✅ clear end date
+                          }
+                          : exp
+                      )
+                    )
+                  }}
+                  className="h-4 w-4 accent-cyan-500 cursor-pointer focus:ring-2 focus:ring-cyan-400 border-cyan-500/40 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+                />
+                <Label htmlFor={`isCurrently-${experience.id}`} className="cursor-pointer text-sm font-medium transition-colors hover:text-cyan-400">
+                  Currently Working Here
+                </Label>
               </div>
 
               {/* Description */}

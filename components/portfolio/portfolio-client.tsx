@@ -7,6 +7,7 @@ import { PortfolioProjects } from "@/components/portfolio/projects"
 import { PortfolioSkills } from "@/components/portfolio/skills"
 import { PortfolioFooter } from "@/components/portfolio/footer"
 import { CursorAnimation } from "../cursor-animation"
+import { PortfolioAchievements } from "./achivements"
 
 type SocialLinks = {
   mail?: string
@@ -39,6 +40,15 @@ type Skill = {
   name: string
 }
 
+type Achievement = {
+  id: string
+  title: string
+  category: string
+  issuer: string
+  date: string | null
+  description: string
+}
+
 type Profile = {
   id: string
   username: string
@@ -50,6 +60,7 @@ type Profile = {
   experiences: Experience[]
   projects: Project[]
   skills: Skill[]
+  achievements: Achievement[]
 }
 
 export default function PortfolioClient({
@@ -81,6 +92,8 @@ export default function PortfolioClient({
           <section><PortfolioExperience experiences={profile.experiences} /></section>
           <section><PortfolioProjects projects={profile.projects} /></section>
           <section><PortfolioSkills skills={profile.skills} /></section>
+          <section><PortfolioAchievements achievements={profile.achievements} /></section>
+
 
         </main>
 

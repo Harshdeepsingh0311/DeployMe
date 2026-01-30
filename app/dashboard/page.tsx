@@ -65,6 +65,7 @@ export default async function DashboardPage() {
     .from("projects")
     .select(`
     id,
+    client_id,
     title,
     description,
     tech_stack,
@@ -75,6 +76,7 @@ export default async function DashboardPage() {
   const normalizedProjects =
     projects?.map((p) => ({
       id: p.id,
+      client_id: p.client_id,
       title: p.title,
       description: p.description,
       image: null,

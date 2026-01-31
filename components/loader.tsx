@@ -21,7 +21,7 @@ export default function Loader() {
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <Lottie animationData={loadingAnimation} style={{ width: 1000, height: 1000 }} loop={true} />
+      <Lottie animationData={loadingAnimation} style={{ width: 800, height: 800 }} loop={true} />
     </div>
   );
 }

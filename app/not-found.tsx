@@ -1,7 +1,6 @@
 "use client"
 
 import { CursorAnimation } from "@/components/cursor-animation"
-import { Footer } from "@/components/footer"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Home } from "lucide-react"

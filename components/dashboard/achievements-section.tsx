@@ -13,7 +13,7 @@ interface Achievement {
     id?: string          // DB id
     client_id: string    // ✅ ALWAYS present
     title: string
-    category: "🏆 Competition" | "🎓 Academic" | "📜 Certification" | "🥇 Award" | "🎭 Cultural"
+    category: "🏆 Competition" | "🎓 Academic" | "📜 Certification" | "🥇 Award" | "🎭 Cultural" | "🎖️ Position of Responsibility"
     issuer: string
     date: string
     description: string
@@ -31,6 +31,7 @@ const CATEGORIES = [
     "📜 Certification",
     "🥇 Award",
     "🎭 Cultural",
+    "🎖️ Position of Responsibility",
 ] as const
 
 export default function AchievementsSection({ achievements, onChange }: AchievementsSectionProps) {

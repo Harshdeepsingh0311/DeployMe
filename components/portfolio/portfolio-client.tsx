@@ -91,9 +91,8 @@ export default function PortfolioClient({
           </section>
           <section><PortfolioExperience experiences={profile.experiences} /></section>
           <section><PortfolioProjects projects={profile.projects} /></section>
-          <section><PortfolioSkills skills={profile.skills} /></section>
           <section><PortfolioAchievements achievements={profile.achievements} /></section>
-
+          <section><PortfolioSkills skills={profile.skills} /></section>
 
         </main>
 

@@ -83,6 +83,9 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
           <Link href="#skills" className="block text-gray-400 hover:text-cyan-400">
             Skills
           </Link>
+          <Link href="#achievements" className="block text-gray-400 hover:text-cyan-400">
+            Achievements
+          </Link>
 
           {profile.resume_url && (
             <a href={profile.resume_url} target="_blank" rel="noopener noreferrer">

@@ -32,6 +32,9 @@ export function PortfolioNav({ profile, isOwner }: { profile: Profile, isOwner: 
           <Link href="#projects" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             Projects
           </Link>
+          <Link href="#achievements" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+            Achievements
+          </Link>
           <Link href="#skills" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
             Skills
           </Link>

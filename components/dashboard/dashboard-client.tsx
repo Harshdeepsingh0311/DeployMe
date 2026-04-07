@@ -372,6 +372,11 @@ export default function DashboardClient({
             </Button>
           </Link>
 
+          {!profile.resume_url && (
+            <Button type="button" disabled={true} className="bg-cyan-500 hover:bg-cyan-600 text-black ml-3 mt-5">
+              Upload Resume to enable Autofill
+            </Button>
+          )}
           {profile.resume_url && (
             <Button type="button" disabled={isLoading} onClick={handleAutofill} className="bg-cyan-500 hover:bg-cyan-600 text-black ml-3 mt-5">
               {isLoading ? "Autofill takes around 2-3 minutes in worst case..." : "Autofill from Resume!"}

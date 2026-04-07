@@ -4,8 +4,10 @@ import type React from "react"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Button } from "../ui/button"
 import { User, Mail, Lock, MapPin, FileText, Github, Linkedin } from "lucide-react"
 import { toast } from "../ui/use-toast"
+import { useState } from "react"
 
 interface PersonalDetailsProps {
   data: {
@@ -71,7 +73,7 @@ export default function PersonalDetailsSection({
         [name]: value,
       })
     }
-  }
+  };
 
   return (
     <Card className="border-cyan-500/20 bg-card/50 backdrop-blur-sm p-6">
@@ -244,27 +246,31 @@ export default function PersonalDetailsSection({
             Upload Resume (PDF)
           </Label>
           {profile.resume_url && (
-            <div className="mt-3">
-              <a
-                href={profile.resume_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-cyan-400 hover:underline"
-                onClick={() => {
-                  try {
-                    window.open("/api/view/resume", "_blank")
-                  } catch {
-                    toast({
-                      title: "Resume expired",
-                      description: "Please try again.",
-                    })
-                  }
+            <>
+              <div className="mt-3">
+                <a
+                  href={profile.resume_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-cyan-400 hover:underline"
+                  onClick={() => {
+                    try {
+                      window.open("/api/view/resume", "_blank")
+                    } catch {
+                      toast({
+                        title: "Resume expired",
+                        description: "Please try again.",
+                      })
+                    }
 
-                }}
-              >
-                View Current Resume
-              </a>
-            </div>
+                  }}
+                >
+                  View Current Resume
+                </a>
+              </div>
+
+            </>
+
           )}
 
           <div className="border-2 border-dashed border-cyan-500/30 rounded-lg p-6 text-center hover:border-cyan-500/50 transition-colors">

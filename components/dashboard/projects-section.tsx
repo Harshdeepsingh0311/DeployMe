@@ -144,7 +144,7 @@ export default function ProjectsSection({
                 <Label>Description</Label>
                 <textarea
                   placeholder="Describe your project, what problems it solves, and key features..."
-                  value={project.description}
+                  value={project.description || ""}
                   onChange={(e) =>
                     updateProject(index, "description", e.target.value)
                   }

@@ -88,6 +88,13 @@ export default function DashboardClient({
   const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
+  const [autoFillStatus, setAutoFillStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({
+    type: null,
+    message: "",
+  });
 
   /* ================= PREFILL ================= */
 
@@ -220,6 +227,117 @@ export default function DashboardClient({
     }
   }
 
+  const fillForm = (data: any) => {
+    setPortfolioData((prev) => ({
+      ...prev,
+
+      /* ================= PERSONAL ================= */
+      personal: {
+        ...prev.personal,
+        fullName: prev.personal.fullName || data.profile?.full_name || "",
+        email: prev.personal.email || data.profile?.email || "",
+        bio: prev.personal.bio || data.profile?.bio || "",
+        location: prev.personal.location || data.profile?.location || "",
+        socialLinks: {
+          ...prev.personal.socialLinks,
+          ...data.profile?.social_links,
+        },
+      },
+
+      /* ================= SKILLS ================= */
+      skills: (() => {
+        const cleaned: string[] = (data.skills || [])
+          .filter((s: any): s is string => typeof s === "string")
+          .map((s: string) => s.trim());
+
+        const unique = Array.from(new Set(cleaned));
+
+        return unique.map((s: string) => ({ name: s }));
+      })(),
+
+      /* ================= EXPERIENCE ================= */
+      experience: (data.experience || []).map((exp: any) => ({
+        ...exp,
+        start_date: exp.start_date || "",
+        end_date:
+          exp.end_date === "Present" || exp.end_date == null
+            ? ""
+            : exp.end_date,
+      })),
+
+      /* ================= PROJECTS ================= */
+      projects: (data.projects || []).map((p: any) => ({
+        client_id: crypto.randomUUID(), // required
+        title: p.title || "",
+        description: p.description || "",
+        image: null, // cannot autofill files
+        tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack : [],
+        git_link: p.git_link || null,
+        live_link: p.live_link || null,
+      })),
+
+      /* ================= ACHIEVEMENTS ================= */
+      achievements: (data.achievements || []).map((a: any) => ({
+        client_id: crypto.randomUUID(),
+        ...a,
+        date: a.date === "null" || a.date == null ? "" : a.date,
+      })),
+    }));
+  };
+
+  const handleAutofill = async () => {
+    try {
+      setIsLoading(true);
+      setAutoFillStatus({ type: null, message: "" });
+
+      const res = await fetch("/api/autofill-resume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: profile.resume_url, // from Supabase public URL
+        }),
+      });
+
+      const text = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("Non-JSON response:", text);
+        setAutoFillStatus({
+          type: "error",
+          message: "Server returned an unexpected response.",
+        });
+        throw new Error("Autofill failed");
+      }
+
+      if (!res.ok) {
+        setAutoFillStatus({
+          type: "error",
+          message: data?.error || "Failed to parse resume.",
+        });
+        throw new Error(data?.error || "Autofill failed");
+      }
+
+      fillForm(data);
+
+      setAutoFillStatus({
+        type: "success",
+        message: "Autofill completed! Please review your details and enter dates yourselves.",
+      });
+
+    } catch (err) {
+      console.error(err);
+      setAutoFillStatus({
+        type: "error",
+        message: "Network error. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   /* ================= UI ================= */
 
@@ -233,6 +351,18 @@ export default function DashboardClient({
           <p className="text-muted-foreground">
             Create and customize your professional portfolio
           </p>
+
+          {autoFillStatus.type && (
+            <div
+              className={`mt-4 p-3 rounded-md text-sm ${autoFillStatus.type === "success"
+                ? "bg-green-500/10 text-green-600 border border-green-500/20"
+                : "bg-red-500/10 text-red-600 border border-red-500/20"
+                }`}
+            >
+              {autoFillStatus.message}
+            </div>
+          )}
+
           <Link href={`/portfolio/${profile.username}`}>
             <Button
               type="button"
@@ -241,6 +371,13 @@ export default function DashboardClient({
               View Portfolio
             </Button>
           </Link>
+
+          {profile.resume_url && (
+            <Button type="button" disabled={isLoading} onClick={handleAutofill} className="bg-cyan-500 hover:bg-cyan-600 text-black ml-3 mt-5">
+              {isLoading ? "Autofill takes around 2-3 minutes in worst case..." : "Autofill from Resume!"}
+            </Button>
+          )}
+
           <div className="flex items-center gap-2 mt-5">
             <Input
               value={portfolioUrl}
@@ -285,7 +422,7 @@ export default function DashboardClient({
 
           <AchievementsSection
             achievements={portfolioData.achievements}
-            onChange={(achievements)=>setPortfolioData((p)=>({...p, achievements}))} />
+            onChange={(achievements) => setPortfolioData((p) => ({ ...p, achievements }))} />
 
           <div className="flex justify-end pt-4">
             <Button

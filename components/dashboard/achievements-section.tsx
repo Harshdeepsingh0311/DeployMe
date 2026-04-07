@@ -115,7 +115,7 @@ export default function AchievementsSection({ achievements, onChange }: Achievem
                                     <Input
                                         id={`issuer-${achievement.client_id}`}
                                         placeholder="Organization name"
-                                        value={achievement.issuer}
+                                        value={achievement.issuer || ""}
                                         onChange={(e) => updateAchievement(achievement.client_id, "issuer", e.target.value)}
                                         className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50"
                                     />
@@ -126,7 +126,7 @@ export default function AchievementsSection({ achievements, onChange }: Achievem
                                     <Input
                                         id={`date-${achievement.client_id}`}
                                         type="month"
-                                        value={achievement.date}
+                                        value={achievement.date || ""}
                                         onChange={(e) => updateAchievement(achievement.client_id, "date", e.target.value)}
                                         className="bg-input/50 border-cyan-500/20 focus-visible:border-cyan-500/50 [&::-webkit-calendar-picker-indicator]:opacity-60
     [&::-webkit-calendar-picker-indicator]:invert"
@@ -139,7 +139,7 @@ export default function AchievementsSection({ achievements, onChange }: Achievem
                                 <textarea
                                     id={`description-${achievement.client_id}`}
                                     placeholder="Describe your achievement, its impact, and what you learned..."
-                                    value={achievement.description}
+                                    value={achievement.description || ""}
                                     onChange={(e) => updateAchievement(achievement.client_id, "description", e.target.value)}
                                     rows={3}
                                     className="w-full rounded-md border border-cyan-500/20 bg-input/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-cyan-500/50 focus-visible:outline-none resize-none"

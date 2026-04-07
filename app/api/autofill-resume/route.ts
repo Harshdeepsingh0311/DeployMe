@@ -97,14 +97,14 @@ const responseSchema = {
 
 export async function POST(req: NextRequest) {
   try {
-    console.log("Step 1: Request received");
+    // console.log("Step 1: Request received");
     const { url } = await req.json();
-    console.log("Step 2: URL =", url);
+    // console.log("Step 2: URL =", url);
 
     const pdfBuffer = await fetch(url).then(res => res.arrayBuffer());
-    console.log("Step 3: PDF fetched");
+    // console.log("Step 3: PDF fetched");
     const data = await extractTextFromPDF(pdfBuffer);
-    console.log("Step 4: Text extracted");
+    // console.log("Step 4: Text extracted");
 
     let rawText = data;
     if (rawText.length > 15000) {
@@ -123,10 +123,10 @@ export async function POST(req: NextRequest) {
     ${rawText}`;
 
     const result = await model.generateContent(prompt);
-    console.log("Step 5: Sending to Gemini");
+    // console.log("Step 5: Sending to Gemini");
     const parsed = JSON.parse(result.response.text());
 
-    console.log(parsed);
+    // console.log(parsed);
     return NextResponse.json(parsed);
 
   } catch (err: any) {

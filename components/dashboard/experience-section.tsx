@@ -86,7 +86,7 @@ export default function ExperienceSection({
                   <Label>Company / Organization</Label>
                   <Input
                     placeholder="e.g., Google, Microsoft"
-                    value={experience.company}
+                    value={experience.company || ""}
                     onChange={(e) =>
                       updateExperience(index, "company", e.target.value)
                     }
@@ -98,7 +98,7 @@ export default function ExperienceSection({
                   <Label>Role / Position</Label>
                   <Input
                     placeholder="e.g., Senior Developer"
-                    value={experience.role}
+                    value={experience.role || ""}
                     onChange={(e) =>
                       updateExperience(index, "role", e.target.value)
                     }
@@ -113,7 +113,7 @@ export default function ExperienceSection({
                   <Label>Start Date</Label>
                   <Input
                     type="month"
-                    value={experience.startDate}
+                    value={experience.startDate || ""}
                     onChange={(e) =>
                       updateExperience(index, "startDate", e.target.value)
                     }
@@ -126,7 +126,7 @@ export default function ExperienceSection({
                   <Label>End Date</Label>
                   <Input
                     type="month"
-                    value={experience.endDate}
+                    value={experience.endDate || ""}
                     disabled={experience.isCurrent}
                     onChange={(e) =>
                       updateExperience(index, "endDate", e.target.value)

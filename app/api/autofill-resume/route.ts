@@ -1,107 +1,140 @@
-import { NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/utils/supabase/server";
-import { PDFParse } from "pdf-parse";
-import mammoth from "mammoth";
+import { NextRequest, NextResponse } from "next/server";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+const pdfParse = (await import("pdf-parse/lib/pdf-parse.js")).default;
+// async function extractTextFromPDF(buffer: ArrayBuffer) {
+//   const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
-export async function POST() {
+//   // ✅ disable worker globally
+//   // ✅ HARD disable worker
+//   (pdfjsLib as any).GlobalWorkerOptions.workerPort = null;
+
+//   const pdf = await pdfjsLib.getDocument({
+//     data: buffer,
+//   }).promise;
+
+//   let text = "";
+
+//   for (let i = 1; i <= pdf.numPages; i++) {
+//     const page = await pdf.getPage(i);
+//     const content = await page.getTextContent();
+
+//     const strings = content.items.map((item: any) => item.str);
+//     text += strings.join(" ") + "\n";
+//   }
+
+//   return text;
+// }
+
+async function extractTextFromPDF(buffer: ArrayBuffer) {
+  const data = await pdfParse(Buffer.from(buffer));
+  return data.text;
+}
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+const responseSchema = {
+  description: "Resume data extraction",
+  type: SchemaType.OBJECT,
+  properties: {
+    profile: {
+      type: SchemaType.OBJECT,
+      properties: {
+        full_name: { type: SchemaType.STRING },
+        email: { type: SchemaType.STRING },
+        bio: { type: SchemaType.STRING },
+        location: { type: SchemaType.STRING },
+        social_links: { type: SchemaType.OBJECT },
+      },
+    },
+    experience: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          company: { type: SchemaType.STRING },
+          role: { type: SchemaType.STRING },
+          start_date: { type: SchemaType.STRING },
+          end_date: { type: SchemaType.STRING },
+          description: { type: SchemaType.STRING },
+        },
+      },
+    },
+    projects: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: { type: SchemaType.STRING },
+          description: { type: SchemaType.STRING },
+          tech_stack: {
+            type: SchemaType.ARRAY,
+            items: { type: SchemaType.STRING },
+          },
+          git_link: { type: SchemaType.STRING },
+          live_link: { type: SchemaType.STRING },
+        },
+      },
+    },
+    achievements: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: { type: SchemaType.STRING },
+          category: { type: SchemaType.STRING },
+          issuer: { type: SchemaType.STRING },
+          date: { type: SchemaType.STRING },
+          description: { type: SchemaType.STRING },
+        },
+      },
+    },
+    skills: {
+      type: SchemaType.ARRAY,
+      items: { type: SchemaType.STRING },
+    },
+  },
+} as any;
+
+export async function POST(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient();
+    console.log("Step 1: Request received");
+    const { url } = await req.json();
+    console.log("Step 2: URL =", url);
 
-    // 1️⃣ Get authenticated user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const pdfBuffer = await fetch(url).then(res => res.arrayBuffer());
+    console.log("Step 3: PDF fetched");
+    const data = await extractTextFromPDF(pdfBuffer);
+    console.log("Step 4: Text extracted");
 
-    // console.log(authError);
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    let rawText = data;
+    if (rawText.length > 15000) {
+      rawText = rawText.slice(0, 15000);
     }
 
-    // 2️⃣ Get resume path from profile
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("resume_url")
-      .eq("id", user.id)
-      .single();
-
-    // console.log(profile);
-
-    if (profileError || !profile?.resume_url) {
-      return NextResponse.json(
-        { error: "No resume uploaded" },
-        { status: 400 },
-      );
-    }
-
-    // 3️⃣ Generate signed URL
-    // const { data: signedUrlData, error: signedError } = await supabase.storage
-    //   .from("resume")
-    //   .createSignedUrl(profile.resume_url, 60);
-
-    const { data: publicURL } = supabase.storage
-      .from("resume")
-      .getPublicUrl(`${user.id}/resume.pdf`);
-
-    console.log(publicURL.publicUrl);
-
-    // console.log(signedUrlData);
-
-    if (!publicURL.publicUrl) {
-      console.log("yaha se aaya");
-      return NextResponse.json(
-        { error: "Unable to access resume" },
-        { status: 500 },
-      );
-    }
-
-    const parser = new PDFParse({
-      url: "https://xxexahipalifxahaqseu.supabase.co/storage/v1/object/public/resume/c63b7077-982d-424e-8710-45591e675a35/resume.pdf",
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3-flash-preview",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema,
+      },
     });
-    const data = await parser.getText();
-    console.log(data.text);
 
-    // 4️⃣ Download file buffer
-    // const fileRes = await fetch(publicURL.publicUrl);
-    // const buffer = Buffer.from(await fileRes.arrayBuffer());
+    const prompt = `Extract structured data from this resume:
+    ${rawText}`;
 
-    // console.log("File size:", buffer.length);
+    const result = await model.generateContent(prompt);
+    console.log("Step 5: Sending to Gemini");
+    const parsed = JSON.parse(result.response.text());
 
-    // let rawText = "";
+    console.log(parsed);
+    return NextResponse.json(parsed);
 
-    // if (profile.resume_url.endsWith(".pdf")) {
-    //   const parser = new PDFParse({
-    //     url: "https://xxexahipalifxahaqseu.supabase.co/storage/v1/object/public/resume/c63b7077-982d-424e-8710-45591e675a35/resume.pdf",
-    //   });
-    //   //   const pdfData = await PDFParse(buffer);
-    //   const result = await parser.getText();
-    //   rawText = result.text;
-    //   // } else if (profile.resume_url.endsWith(".docx")) {
-    //   //   const docxData = await mammoth.extractRawText({ buffer });
-    //   //   rawText = docxData.value;
-    // } else {
-    //   return NextResponse.json(
-    //     { error: "Unsupported file type" },
-    //     { status: 400 },
-    //   );
-    // }
+  } catch (err: any) {
+    console.log("Error: ", err);
 
-    // if (!rawText || rawText.length < 50) {
-    //   return NextResponse.json(
-    //     { error: "Could not extract text from resume" },
-    //     { status: 400 },
-    //   );
-    // }
-
-    // console.log(rawText);
-
-    return NextResponse.json({ message: "Done." });
-  } catch (error) {
-    console.error("AUTOFILL ERROR:", error);
     return NextResponse.json(
-      { error: "Server error", details: String(error) },
-      { status: 500 },
+      { error: err.message || "Internal server error" },
+      { status: 500 }
     );
   }
 }
